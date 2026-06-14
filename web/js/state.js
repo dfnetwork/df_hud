@@ -21,6 +21,8 @@ let MAX_SPEED = 200;
 const GAUGE_ARC = 353.43;
 const ARC_ARC = 228.9;
 const NEON_CIRC = 452.39;
+let SPEEDO_IDLE_RPM = 900;
+let SPEEDO_MAX_RPM = 8000;
 
 let currentSpeedoStyle = 'speedo-minimal';
 let currentVoiceStyle = 'voice-simple';

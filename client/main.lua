@@ -109,6 +109,30 @@ local manualBaseMaxSpeed = nil
 local nextManualShiftAt = 0
 local clutchHeld = false
 local playerManualGearsEnabled = Config.ManualGears.defaultEnabled == true
+local forcedManualVehicles = {}
+
+local function rebuildForcedManualVehicles()
+    forcedManualVehicles = {}
+
+    local configured = Config.ManualGears and Config.ManualGears.forcedVehicles or nil
+    if type(configured) ~= 'table' then
+        return
+    end
+
+    for _, model in ipairs(configured) do
+        local hash = nil
+
+        if type(model) == 'number' then
+            hash = model
+        elseif type(model) == 'string' and model ~= '' then
+            hash = tonumber(model) or joaat(model)
+        end
+
+        if hash then
+            forcedManualVehicles[hash] = true
+        end
+    end
+end
 
 local function getServerLocale()
     return GetLocale(Config.Language or Config.Locale)
@@ -145,6 +169,10 @@ local function sendServerConfig()
         locale = Config.Language or Config.Locale,
         translations = getServerLocale(),
         logo = Config.Logo,
+        speedo = {
+            idleRpm = Config.Speedo.idleRpm or 900,
+            maxRpm = Config.Speedo.maxRpm or 8000,
+        },
         manualGears = {
             enabled = Config.ManualGears.enabled == true,
             playerEnabled = playerManualGearsEnabled == true
@@ -409,8 +437,16 @@ local function manualSupportedVehicle(vehicleClass)
     return vehicleClass ~= 8 and vehicleClass ~= 13 and vehicleClass ~= 14 and vehicleClass ~= 15 and vehicleClass ~= 16
 end
 
-local function manualGearsAvailable()
-    return Config.ManualGears.enabled and playerManualGearsEnabled
+local function isForcedManualVehicle(vehicle)
+    if vehicle == 0 then
+        return false
+    end
+
+    return forcedManualVehicles[GetEntityModel(vehicle)] == true
+end
+
+local function manualGearsAvailable(vehicle)
+    return (Config.ManualGears.enabled and playerManualGearsEnabled) or isForcedManualVehicle(vehicle)
 end
 
 local function resetManualGearState(vehicle)
@@ -431,8 +467,12 @@ local function setManualMode(vehicle, active)
         return
     end
 
-    if active and not manualGearsAvailable() then
+    if active and not manualGearsAvailable(vehicle) then
         return
+    end
+
+    if not active and isForcedManualVehicle(vehicle) then
+        active = true
     end
 
     manualMode = active == true
@@ -561,9 +601,11 @@ RegisterNUICallback('setManualGearsEnabled', function(data, cb)
     playerManualGearsEnabled = data.enabled == true
     TriggerServerEvent('df_hud:server:setManualGearsPreference', playerManualGearsEnabled)
 
-    if not manualGearsAvailable() then
-        local vehicle = IsPedInAnyVehicle(cache.ped, false) and GetVehiclePedIsIn(cache.ped, false) or 0
+    local vehicle = IsPedInAnyVehicle(cache.ped, false) and GetVehiclePedIsIn(cache.ped, false) or 0
+    if not manualGearsAvailable(vehicle) then
         resetManualGearState(vehicle)
+    elseif isForcedManualVehicle(vehicle) then
+        setManualMode(vehicle, true)
     end
 
     cb('ok')
@@ -620,6 +662,7 @@ end
 
 refreshFramework()
 registerFrameworkEvents()
+rebuildForcedManualVehicles()
 
 AddStateBagChangeHandler('hunger', ('player:%s'):format(cache.serverId), function(_, _, value)
     hunger = value
@@ -831,12 +874,18 @@ end, false)
 RegisterCommand('-df_seatbelt', function() end, false)
 
 RegisterCommand('+df_manual_toggle', function()
-    if not manualGearsAvailable() or hudInputBlocked() then return end
+    if hudInputBlocked() then return end
     if not IsPedInAnyVehicle(cache.ped, false) then return end
 
     local vehicle = GetVehiclePedIsIn(cache.ped, false)
     local vehicleClass = GetVehicleClass(vehicle)
+    if not manualGearsAvailable(vehicle) then return end
     if not manualSupportedVehicle(vehicleClass) then return end
+
+    if isForcedManualVehicle(vehicle) then
+        setManualMode(vehicle, true)
+        return
+    end
 
     manualVehicle = vehicle
     manualBaseMaxSpeed = manualBaseMaxSpeed or GetVehicleEstimatedMaxSpeed(vehicle)
@@ -845,8 +894,9 @@ end, false)
 RegisterCommand('-df_manual_toggle', function() end, false)
 
 RegisterCommand('+df_gear_up', function()
-    if not manualGearsAvailable() or not manualMode or not canShiftManual() or not canShiftWithoutClutch() then return end
     if not IsPedInAnyVehicle(cache.ped, false) then return end
+    local vehicle = GetVehiclePedIsIn(cache.ped, false)
+    if not manualGearsAvailable(vehicle) or not manualMode or not canShiftManual() or not canShiftWithoutClutch() then return end
 
     manualGear = math.min(Config.ManualGears.maxGears, manualGear + 1)
     queueManualShiftCooldown()
@@ -854,8 +904,9 @@ end, false)
 RegisterCommand('-df_gear_up', function() end, false)
 
 RegisterCommand('+df_gear_down', function()
-    if not manualGearsAvailable() or not manualMode or not canShiftManual() or not canShiftWithoutClutch() then return end
     if not IsPedInAnyVehicle(cache.ped, false) then return end
+    local vehicle = GetVehiclePedIsIn(cache.ped, false)
+    if not manualGearsAvailable(vehicle) or not manualMode or not canShiftManual() or not canShiftWithoutClutch() then return end
 
     manualGear = math.max(0, manualGear - 1)
     queueManualShiftCooldown()
@@ -863,8 +914,10 @@ end, false)
 RegisterCommand('-df_gear_down', function() end, false)
 
 RegisterCommand('+df_clutch', function()
-    if not manualGearsAvailable() or hudInputBlocked() then return end
+    if hudInputBlocked() then return end
     if not IsPedInAnyVehicle(cache.ped, false) then return end
+    local vehicle = GetVehiclePedIsIn(cache.ped, false)
+    if not manualGearsAvailable(vehicle) then return end
     clutchHeld = true
 end, false)
 RegisterCommand('-df_clutch', function()
@@ -953,20 +1006,32 @@ CreateThread(function()
                     vType = 'car'
                 end
 
+                local forcedManual = isForcedManualVehicle(vehicle)
+
                 if manualVehicle ~= vehicle then
                     manualVehicle = vehicle
                     manualBaseMaxSpeed = GetVehicleEstimatedMaxSpeed(vehicle)
                     manualGear = 0
                     clutchHeld = false
-                    manualMode = manualGearsAvailable() and Config.ManualGears.defaultEnabled and manualSupportedVehicle(vClass) or false
+                    manualMode = manualGearsAvailable(vehicle) and manualSupportedVehicle(vClass) and (forcedManual or Config.ManualGears.defaultEnabled) or false
                 end
 
-                if manualGearsAvailable() and manualMode and manualSupportedVehicle(vClass) and manualBaseMaxSpeed then
+                if forcedManual and manualSupportedVehicle(vClass) and not manualMode then
+                    manualMode = true
+                end
+
+                if manualGearsAvailable(vehicle) and manualMode and manualSupportedVehicle(vClass) and manualBaseMaxSpeed then
                     if clutchHeld or manualGear == 0 then
                         SetEntityMaxSpeed(vehicle, math.max(2.0, speed / 3.6 + 1.5))
                     else
-                        local ratio = Config.ManualGears.ratios[manualGear] or 1.0
-                        SetEntityMaxSpeed(vehicle, math.max(4.0, manualBaseMaxSpeed * ratio))
+                        local ratio = math.max(0.05, Config.ManualGears.ratios[manualGear] or 1.0)
+                        local targetMaxSpeed = manualBaseMaxSpeed * ratio
+
+                        if manualGear >= Config.ManualGears.maxGears then
+                            targetMaxSpeed = targetMaxSpeed * (Config.ManualGears.topGearMultiplier or 1.0)
+                        end
+
+                        SetEntityMaxSpeed(vehicle, math.max(4.0, targetMaxSpeed))
                     end
                     gear = manualGear
                 elseif manualBaseMaxSpeed then

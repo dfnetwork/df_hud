@@ -49,6 +49,11 @@ window.addEventListener('message', (event) => {
             }
         }
 
+        if (data.speedo) {
+            SPEEDO_IDLE_RPM = Number(data.speedo.idleRpm ?? SPEEDO_IDLE_RPM) || SPEEDO_IDLE_RPM;
+            SPEEDO_MAX_RPM = Number(data.speedo.maxRpm ?? SPEEDO_MAX_RPM) || SPEEDO_MAX_RPM;
+        }
+
         syncCfgUI();
         applyCfg();
         saveCfg();
@@ -193,6 +198,7 @@ window.addEventListener('message', (event) => {
 
         if (!data.inVehicle) {
             if (!speedoDragActive) speedoEl.style.visibility = 'hidden';
+            document.getElementById('speedo-performance')?.classList.remove('visible');
             stopSeatbeltWarning();
             stopBlinkerSound();
             refreshStatVisibility();
@@ -210,10 +216,11 @@ window.addEventListener('message', (event) => {
         const gearDisplay = data.manualMode ? (data.manualGearDisplay || String(data.manualGear ?? 0)) : null;
         const rpm = Math.max(0, Math.min(1, Number(data.rpm ?? 0)));
 
-        if (vehicleType === 'heli' || vehicleType === 'plane') setActiveSpeedoPanel('speedo-air');
-        else if (vehicleType === 'boat') setActiveSpeedoPanel('speedo-boat');
-        else if (vehicleType === 'bicycle') setActiveSpeedoPanel('speedo-bike');
-        else setActiveSpeedoPanel(currentSpeedoStyle);
+        let activeSpeedoPanel = currentSpeedoStyle;
+        if (vehicleType === 'heli' || vehicleType === 'plane') activeSpeedoPanel = 'speedo-air';
+        else if (vehicleType === 'boat') activeSpeedoPanel = 'speedo-boat';
+        else if (vehicleType === 'bicycle') activeSpeedoPanel = 'speedo-bike';
+        setActiveSpeedoPanel(activeSpeedoPanel);
 
         const isBicycle = vehicleType === 'bicycle';
         const hasBelt = vehicleType === 'car';
@@ -234,6 +241,12 @@ window.addEventListener('message', (event) => {
         updateFuel(data.fuel ?? 100);
         updateSpeedoVisuals(speed);
         updatePerformanceVisuals(speed, gear, rpm, gearDisplay);
+
+        const performanceHud = document.getElementById('speedo-performance');
+        if (performanceHud) {
+            const showPerformance = (vehicleType === 'car' || vehicleType === 'bike') && activeSpeedoPanel !== 'speedo-race';
+            performanceHud.classList.toggle('visible', showPerformance);
+        }
 
         const indicators = {
             blinkerLeft: !!data.blinkerLeft,

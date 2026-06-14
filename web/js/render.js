@@ -193,6 +193,20 @@ function updatePerformanceVisuals(speed, gear, rpm, gearDisplay = null) {
     const raceFill = document.getElementById('sr-rpm-fill');
     if (raceFill) raceFill.style.width = `${Math.max(0, Math.min(1, rpm)) * 100}%`;
 
+    const perfGear = document.getElementById('speedo-performance-gear');
+    if (perfGear) perfGear.textContent = gearDisplay || (speed <= 0 ? 'N' : (gear <= 0 ? 'R' : String(gear)));
+
+    const perfRpmFill = document.getElementById('speedo-performance-rpm-fill');
+    if (perfRpmFill) perfRpmFill.style.width = `${Math.max(0, Math.min(1, rpm)) * 100}%`;
+
+    const perfRpmText = document.getElementById('speedo-performance-rpm-text');
+    if (perfRpmText) {
+        const rpmRatio = Math.max(0, Math.min(1, rpm));
+        let displayRpm = Math.max(0, Math.round(rpmRatio * SPEEDO_MAX_RPM));
+        if (displayRpm > 0 && displayRpm < SPEEDO_IDLE_RPM) displayRpm = SPEEDO_IDLE_RPM;
+        perfRpmText.textContent = `${displayRpm} RPM`;
+    }
+
     document.querySelectorAll('#speedo-race .race-rpm-seg').forEach((seg, index, list) => {
         const threshold = (index + 1) / list.length;
         let color = 'rgba(255,255,255,0.10)';

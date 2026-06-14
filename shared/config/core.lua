@@ -15,6 +15,8 @@ Config.Stats = {
 -- ─── Velocímetro ───────────────────────────────────────────────────────────────
 Config.Speedo = {
     updateInterval = 100,   -- ms entre cada actualización del velocímetro
+    idleRpm = 900,          -- valor visual aproximado para ralenti en el HUD
+    maxRpm = 8000,          -- valor visual máximo aproximado para el HUD
 }
 
 -- ─── Voz ───────────────────────────────────────────────────────────────────────
@@ -74,11 +76,16 @@ Config.InventoryHooks = {
 
 -- ─── Marchas manuales (starter) ───────────────────────────────────────────────
 Config.ManualGears = {
-    enabled = false,           -- sistema base desactivado por defecto
+    enabled = true,            -- habilita la opción en /hud y el sistema base
     defaultEnabled = false,    -- activar manual al entrar en vehículo
     maxGears = 6,
     requireClutch = true,      -- obliga a pisar embrague para subir/bajar marcha
     shiftCooldown = 180,       -- ms entre cambios
+    topGearMultiplier = 1.08,  -- margen extra para que la última marcha alcance la velocidad final real
+    forcedVehicles = {         -- modelos que siempre usarán marchas manuales
+        -- 'sultanrs',
+        -- 'elegy',
+    },
     ratios = { 0.18, 0.32, 0.48, 0.66, 0.84, 1.00 },
 }
 
