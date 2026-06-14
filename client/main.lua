@@ -381,7 +381,14 @@ local function updateRadarVisibility()
     setRadarState(shouldShow)
 end
 
-local function shouldProtectStamina(ped)
+local function isMovementInputPressed()
+    return IsControlPressed(0, 32)
+        or IsControlPressed(0, 33)
+        or IsControlPressed(0, 34)
+        or IsControlPressed(0, 35)
+end
+
+local function shouldBlockSprintWithoutMovement(ped)
     if not ped or ped == 0 then
         return false
     end
@@ -394,11 +401,8 @@ local function shouldProtectStamina(ped)
         return false
     end
 
-    local speed = GetEntitySpeed(ped)
     local sprintPressed = IsControlPressed(0, 21)
-    local actuallySprinting = speed > 0.45 and (IsPedSprinting(ped) or IsPedRunning(ped))
-
-    return sprintPressed and not actuallySprinting
+    return sprintPressed and not isMovementInputPressed()
 end
 
 local function manualSupportedVehicle(vehicleClass)
@@ -687,15 +691,26 @@ end)
 
 CreateThread(function()
     while true do
+        local waitMs = 250
+
+        if playerLoaded then
+            local ped = cache.ped
+            if shouldBlockSprintWithoutMovement(ped) then
+                waitMs = 0
+                DisableControlAction(0, 21, true)
+            end
+        end
+
+        Wait(waitMs)
+    end
+end)
+
+CreateThread(function()
+    while true do
         Wait(playerLoaded and 120 or 1000)
         if not playerLoaded then
             stamina = 100
         else
-            local ped = cache.ped
-            if shouldProtectStamina(ped) then
-                RestorePlayerStamina(PlayerId(), 1.0)
-            end
-
             stamina = math.max(0, math.min(100, math.floor(GetPlayerStamina(PlayerId()))))
         end
     end

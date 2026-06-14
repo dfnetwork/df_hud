@@ -47,9 +47,7 @@ Method used for this estimate:
 - Compared source files only: `.lua`, `.js`, `.css`, `.html`
 - Current `df_hud`: **70 source files**, **7,453 non-empty source lines**
 - Upstream `hx-hud`: **7 source files**, **3,209 non-empty source lines**
-- For each current file, the best textual similarity match against upstream was measured and weighted by non-empty line count
 
-This percentage is a **technical approximation for documentation and attribution clarity**. It is **not** a legal ruling on authorship, copyright ownership, or licensing scope.
 
 ## What Changed In DF HUD
 
@@ -82,6 +80,7 @@ Compared to upstream `hx-hud`, this fork now includes:
 - [Русский](docs/readme/README.ru.md)
 - [日本語](docs/readme/README.jp.md)
 - [中文](docs/readme/README.cn.md)
+- [Changelog](CHANGELOG.md)
 
 ## Runtime Locale Support
 
