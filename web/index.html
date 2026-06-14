@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>DF HUD</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body style="background:transparent">
+
+<div id="hud-menu">
+    <div id="hud-menu-wrap">
+
+        <div id="hud-menu-sidebar" class="glass">
+            <div id="hud-menu-logo">DF HUD</div>
+            <nav id="hud-menu-nav">
+                <div class="nav-item active" data-section="section-style">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                    <span>Estilo del HUD</span>
+                </div>
+                <div class="nav-item" data-section="section-speedo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 12l4-4"/><circle cx="12" cy="12" r="1"/></svg>
+                    <span>Estilo velocímetro</span>
+                </div>
+                <div class="nav-item" data-section="section-adjust">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                    <span>Ajuste de HUD</span>
+                </div>
+                <div class="nav-item" data-section="section-config">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    <span>Configuración</span>
+                </div>
+            </nav>
+            <button id="hud-menu-close">✕ Cerrar</button>
+        </div>
+
+        <div id="hud-menu-content"><div class="content-inner">
+
+            <div id="section-style" class="menu-section active">
+                <h2 class="section-title">Estilo del HUD</h2>
+                <p class="section-desc">Selecciona cómo se muestran las estadísticas del jugador.</p>
+                <div id="hud-menu-grid">
+                    <div class="menu-card" data-style="hud-boxes">
+                        <div class="card-preview"><div class="prev-box" style="background:rgba(255,75,87,0.7)"></div><div class="prev-box" style="background:rgba(9,132,227,0.7)"></div><div class="prev-box" style="background:rgba(253,203,110,0.7)"></div><div class="prev-box" style="background:rgba(0,206,201,0.7)"></div><div class="prev-box" style="background:rgba(108,92,231,0.7)"></div></div>
+                        <span class="card-label">Cuadrados</span>
+                    </div>
+                    <div class="menu-card" data-style="hud-bars">
+                        <div class="card-preview card-preview-col"><div class="prev-bar" style="background:rgba(255,75,87,0.7);width:90%"></div><div class="prev-bar" style="background:rgba(9,132,227,0.7);width:40%"></div><div class="prev-bar" style="background:rgba(253,203,110,0.7);width:75%"></div><div class="prev-bar" style="background:rgba(0,206,201,0.7);width:60%"></div><div class="prev-bar" style="background:rgba(108,92,231,0.7);width:85%"></div></div>
+                        <span class="card-label">Barras</span>
+                    </div>
+                    <div class="menu-card" data-style="hud-origen">
+                        <div class="card-preview card-preview-col card-preview-origen"><div class="prev-origen" style="--preview-color:rgba(255,75,87,0.85);width:92%"></div><div class="prev-origen" style="--preview-color:rgba(9,132,227,0.85);width:54%"></div><div class="prev-origen" style="--preview-color:rgba(253,203,110,0.85);width:78%"></div><div class="prev-origen" style="--preview-color:rgba(0,206,201,0.85);width:66%"></div><div class="prev-origen" style="--preview-color:rgba(108,92,231,0.85);width:88%"></div></div>
+                        <span class="card-label">Origen</span>
+                    </div>
+                    <div class="menu-card" data-style="hud-samy">
+                        <div class="card-preview card-preview-col card-preview-samy"><div class="prev-samy" style="--preview-color:rgba(255,75,87,0.85);width:100%"></div><div class="prev-samy" style="--preview-color:rgba(9,132,227,0.85);width:76%"></div><div class="prev-samy" style="--preview-color:rgba(253,203,110,0.85);width:84%"></div><div class="prev-samy" style="--preview-color:rgba(0,206,201,0.85);width:80%"></div><div class="prev-samy" style="--preview-color:rgba(108,92,231,0.85);width:70%"></div></div>
+                        <span class="card-label">Samy</span>
+                    </div>
+                    <div class="menu-card" data-style="hud-circles">
+                        <div class="card-preview"><div class="prev-box prev-circle" style="background:rgba(255,75,87,0.7)"></div><div class="prev-box prev-circle" style="background:rgba(9,132,227,0.7)"></div><div class="prev-box prev-circle" style="background:rgba(253,203,110,0.7)"></div><div class="prev-box prev-circle" style="background:rgba(0,206,201,0.7)"></div><div class="prev-box prev-circle" style="background:rgba(108,92,231,0.7)"></div></div>
+                        <span class="card-label">Círculos</span>
+                    </div>
+                    <div class="menu-card" data-style="hud-stars">
+                        <div class="card-preview"><div class="prev-box prev-star" style="background:rgba(255,75,87,0.7)"></div><div class="prev-box prev-star" style="background:rgba(9,132,227,0.7)"></div><div class="prev-box prev-star" style="background:rgba(253,203,110,0.7)"></div><div class="prev-box prev-star" style="background:rgba(0,206,201,0.7)"></div><div class="prev-box prev-star" style="background:rgba(108,92,231,0.7)"></div></div>
+                        <span class="card-label">Estrellas</span>
+                    </div>
+                    <div class="menu-card" data-style="hud-diamonds">
+                        <div class="card-preview"><div class="prev-box prev-diamond" style="background:rgba(255,75,87,0.7)"></div><div class="prev-box prev-diamond" style="background:rgba(9,132,227,0.7)"></div><div class="prev-box prev-diamond" style="background:rgba(253,203,110,0.7)"></div><div class="prev-box prev-diamond" style="background:rgba(0,206,201,0.7)"></div><div class="prev-box prev-diamond" style="background:rgba(108,92,231,0.7)"></div></div>
+                        <span class="card-label">Diamantes</span>
+                    </div>
+                    <div class="menu-card" data-style="hud-hex">
+                        <div class="card-preview"><div class="prev-box prev-hex" style="background:rgba(255,75,87,0.7)"></div><div class="prev-box prev-hex" style="background:rgba(9,132,227,0.7)"></div><div class="prev-box prev-hex" style="background:rgba(253,203,110,0.7)"></div><div class="prev-box prev-hex" style="background:rgba(0,206,201,0.7)"></div><div class="prev-box prev-hex" style="background:rgba(108,92,231,0.7)"></div></div>
+                        <span class="card-label">Hexágonos</span>
+                    </div>
+                    <div class="menu-card" data-style="hud-vbar">
+                        <div class="card-preview card-preview-vbar"><div class="prev-vbar" style="background:rgba(255,75,87,0.7);height:90%"></div><div class="prev-vbar" style="background:rgba(9,132,227,0.7);height:40%"></div><div class="prev-vbar" style="background:rgba(253,203,110,0.7);height:75%"></div><div class="prev-vbar" style="background:rgba(0,206,201,0.7);height:60%"></div><div class="prev-vbar" style="background:rgba(108,92,231,0.7);height:85%"></div></div>
+                        <span class="card-label">Barras verticales</span>
+                    </div>
+                    <div class="menu-card" data-style="hud-numbered">
+                        <div class="card-preview"><div class="prev-box prev-num" style="background:rgba(255,75,87,0.6)"><span>87</span></div><div class="prev-box prev-num" style="background:rgba(9,132,227,0.6)"><span>40</span></div><div class="prev-box prev-num" style="background:rgba(253,203,110,0.6)"><span>75</span></div><div class="prev-box prev-num" style="background:rgba(0,206,201,0.6)"><span>60</span></div><div class="prev-box prev-num" style="background:rgba(108,92,231,0.6)"><span>85</span></div></div>
+                        <span class="card-label">Con números</span>
+                    </div>
+                    <div class="menu-card" data-style="hud-pills">
+                        <div class="card-preview"><div class="prev-box prev-pill" style="background:rgba(255,75,87,0.7)"></div><div class="prev-box prev-pill" style="background:rgba(9,132,227,0.7)"></div><div class="prev-box prev-pill" style="background:rgba(253,203,110,0.7)"></div><div class="prev-box prev-pill" style="background:rgba(0,206,201,0.7)"></div><div class="prev-box prev-pill" style="background:rgba(108,92,231,0.7)"></div></div>
+                        <span class="card-label">Píldoras</span>
+                    </div>
+                    <div class="menu-card" data-style="hud-icons">
+                        <div class="card-preview"><svg class="prev-icon" style="color:#ff4757" viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><svg class="prev-icon" style="color:#0984e3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><svg class="prev-icon" style="color:#fdcb6e" viewBox="0 0 24 24" fill="currentColor"><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg><svg class="prev-icon" style="color:#00cec9" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg><svg class="prev-icon" style="color:#6c5ce7" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+                        <span class="card-label">Icono</span>
+                    </div>
+                    <div class="menu-card" data-style="hud-3d">
+                        <div class="card-preview"><div class="prev-box prev-3d" style="background:rgba(255,75,87,0.7)"></div><div class="prev-box prev-3d" style="background:rgba(9,132,227,0.7)"></div><div class="prev-box prev-3d" style="background:rgba(253,203,110,0.7)"></div><div class="prev-box prev-3d" style="background:rgba(0,206,201,0.7)"></div><div class="prev-box prev-3d" style="background:rgba(108,92,231,0.7)"></div></div>
+                        <span class="card-label">3D</span>
+                    </div>
+                </div>
+                <div class="menu-actions">
+                    <span class="menu-hint" id="style-preview-hint">Vista previa hasta guardar.</span>
+                    <button id="save-style-btn" class="menu-save-btn" disabled>Guardar estilo</button>
+                </div>
+                <div class="voice-style-block">
+                    <h3 class="voice-style-title" id="voice-style-title">Voice HUD</h3>
+                    <p class="voice-style-desc" id="voice-style-desc">Cambia el estilo del indicador de voz.</p>
+                    <div id="voice-menu-grid">
+                        <div class="menu-card voice-card-select" data-voice-style="voice-samy">
+                            <div class="card-preview voice-preview voice-preview-samy">
+                                <div class="voice-prev-samy"></div>
+                            </div>
+                            <span class="card-label" id="voice-label-samy">Samy</span>
+                        </div>
+                        <div class="menu-card voice-card-select" data-voice-style="voice-origen">
+                            <div class="card-preview voice-preview voice-preview-origen">
+                                <div class="voice-prev-origen">
+                                    <span></span><span></span><span></span><span class="radio"></span>
+                                </div>
+                            </div>
+                            <span class="card-label" id="voice-label-origen">Origen</span>
+                        </div>
+                    </div>
+                    <div class="menu-actions">
+                        <span class="menu-hint" id="voice-preview-hint">Vista previa hasta guardar.</span>
+                        <button id="save-voice-btn" class="menu-save-btn" disabled>Guardar voz</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-speedo" class="menu-section">
+                <h2 class="section-title">Estilo velocímetro</h2>
+                <p class="section-desc">Selecciona cómo se muestra la velocidad y los indicadores del vehículo.</p>
+                <div id="speedo-menu-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+
+                    <div class="menu-card speedo-card-select" data-speedo="speedo-minimal">
+                        <div class="card-preview" style="height:auto;padding:4px 0;">
+                            <div style="display:flex;align-items:center;gap:3px;background:rgba(0,0,0,0.5);border-radius:99px;padding:3px 6px;">
+                                <div style="width:6px;height:6px;border-radius:50%;background:rgba(249,202,36,0.8)"></div>
+                                <div style="font-size:9px;font-weight:700;color:#fff;">80</div>
+                                <div style="font-size:5px;color:rgba(255,255,255,0.4)">km/h</div>
+                                <div style="width:6px;height:6px;border-radius:50%;background:rgba(249,202,36,0.3)"></div>
+                            </div>
+                        </div>
+                        <span class="card-label">Minimal</span>
+                    </div>
+
+                    <div class="menu-card speedo-card-select" data-speedo="speedo-card">
+                        <div class="card-preview" style="height:auto;padding:4px 0;">
+                            <div style="display:flex;flex-direction:column;align-items:center;background:rgba(0,0,0,0.5);border-radius:8px;padding:4px 8px;gap:2px;">
+                                <div style="font-size:14px;font-weight:800;color:#fff;line-height:1;">80</div>
+                                <div style="font-size:5px;color:rgba(255,255,255,0.4)">km/h</div>
+                            </div>
+                        </div>
+                        <span class="card-label">Tarjeta</span>
+                    </div>
+
+                    <div class="menu-card speedo-card-select" data-speedo="speedo-dash">
+                        <div class="card-preview" style="height:auto;padding:4px 0;">
+                            <div style="display:flex;flex-direction:column;background:rgba(0,0,0,0.5);border-radius:8px;padding:4px 6px;gap:3px;">
+                                <div style="font-size:12px;font-weight:800;color:#fff;line-height:1;">80<span style="font-size:5px;color:rgba(255,255,255,0.4);margin-left:1px;">km/h</span></div>
+                                <div style="height:2px;border-radius:99px;background:rgba(255,255,255,0.15);overflow:hidden;"><div style="width:60%;height:100%;background:#55efc4;border-radius:99px"></div></div>
+                            </div>
+                        </div>
+                        <span class="card-label">Dashboard</span>
+                    </div>
+
+                    <div class="menu-card speedo-card-select" data-speedo="speedo-gauge">
+                        <div class="card-preview" style="height:auto;padding:2px 0;">
+                            <div style="position:relative;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.1);">
+                                <svg viewBox="0 0 34 34" style="position:absolute;top:0;left:0;width:34px;height:34px;">
+                                    <path d="M 8.4 27.4 A 13 13 0 1 1 25.6 27.4" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+                                    <path d="M 8.4 27.4 A 13 13 0 0 1 22.5 9.8" fill="none" stroke="#00d2ff" stroke-width="2"/>
+                                    <line x1="17" y1="17" x2="17" y2="7" stroke="white" stroke-width="1.5" transform="rotate(-30,17,17)"/>
+                                    <circle cx="17" cy="17" r="2" fill="white"/>
+                                </svg>
+                                <div style="position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:7px;font-weight:700;color:#fff;">80</div>
+                            </div>
+                        </div>
+                        <span class="card-label">Analógico</span>
+                    </div>
+
+                    <div class="menu-card speedo-card-select" data-speedo="speedo-arc">
+                        <div class="card-preview" style="height:auto;padding:2px 0;">
+                            <div style="position:relative;width:40px;height:24px;overflow:visible;">
+                                <svg viewBox="0 0 40 24" style="width:40px;height:24px;overflow:visible;">
+                                    <path d="M 4 22 A 18 18 0 0 1 36 22" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3"/>
+                                    <path d="M 4 22 A 18 18 0 0 1 28 7" fill="none" stroke="#00d2ff" stroke-width="3" stroke-linecap="round"/>
+                                </svg>
+                                <div style="position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);font-size:8px;font-weight:700;color:#fff;">80</div>
+                            </div>
+                        </div>
+                        <span class="card-label">Arco</span>
+                    </div>
+
+                    <div class="menu-card speedo-card-select" data-speedo="speedo-cyber">
+                        <div class="card-preview" style="height:auto;padding:2px 0;">
+                            <div style="background:rgba(0,12,24,0.9);border:1px solid rgba(0,210,255,0.4);clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));padding:4px 6px;">
+                                <div style="font-size:14px;font-weight:900;color:#00d2ff;text-shadow:0 0 8px rgba(0,210,255,0.8);font-family:monospace;letter-spacing:-1px;line-height:1;">80</div>
+                                <div style="font-size:5px;color:rgba(0,210,255,0.5);letter-spacing:1px;">km/h</div>
+                            </div>
+                        </div>
+                        <span class="card-label">Cyberpunk</span>
+                    </div>
+
+                    <div class="menu-card speedo-card-select" data-speedo="speedo-bars">
+                        <div class="card-preview" style="height:auto;padding:2px 0;">
+                            <div style="display:flex;flex-direction:column;gap:3px;background:rgba(0,0,0,0.5);border-radius:6px;padding:4px 6px;">
+                                <div style="font-size:10px;font-weight:700;color:#fff;">80 <span style="font-size:5px;color:rgba(255,255,255,0.4)">km/h</span></div>
+                                <div style="display:flex;align-items:flex-end;gap:1.5px;height:14px;">
+                                    <div style="flex:1;height:40%;border-radius:1px;background:#55efc4"></div>
+                                    <div style="flex:1;height:55%;border-radius:1px;background:#55efc4"></div>
+                                    <div style="flex:1;height:70%;border-radius:1px;background:#55efc4"></div>
+                                    <div style="flex:1;height:85%;border-radius:1px;background:#fdcb6e"></div>
+                                    <div style="flex:1;height:100%;border-radius:1px;background:#fdcb6e"></div>
+                                    <div style="flex:1;height:30%;border-radius:1px;background:rgba(255,255,255,0.1)"></div>
+                                    <div style="flex:1;height:30%;border-radius:1px;background:rgba(255,255,255,0.1)"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="card-label">Barras</span>
+                    </div>
+
+                    <div class="menu-card speedo-card-select" data-speedo="speedo-corner">
+                        <div class="card-preview" style="height:auto;padding:2px 0;">
+                            <div style="background:rgba(0,0,0,0.7);border-top:2px solid #ff4757;border-left:2px solid #ff4757;border-radius:0 0 0 6px;padding:3px 6px;clip-path:polygon(0 0,100% 0,100% calc(100% - 5px),calc(100% - 5px) 100%,0 100%);">
+                                <div style="font-size:14px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1;">80</div>
+                                <div style="font-size:5px;color:#ff4757;letter-spacing:1px;">KM/H</div>
+                            </div>
+                        </div>
+                        <span class="card-label">Esquina</span>
+                    </div>
+
+                    <div class="menu-card speedo-card-select" data-speedo="speedo-halo">
+                        <div class="card-preview" style="height:auto;padding:4px 0;">
+                            <div style="display:flex;align-items:flex-end;gap:5px;">
+                                <div style="width:8px;height:8px;border-radius:50%;background:rgba(249,202,36,0.8);transform:translateY(-10px)"></div>
+                                <div style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2);transform:translateY(-5px)"></div>
+                                <div style="display:flex;flex-direction:column;align-items:center;">
+                                    <div style="font-size:13px;font-weight:900;color:#fff;line-height:1;letter-spacing:-0.5px">80</div>
+                                    <div style="font-size:5px;color:rgba(255,255,255,0.4)">km/h</div>
+                                </div>
+                                <div style="width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.2);transform:translateY(-5px)"></div>
+                                <div style="width:8px;height:8px;border-radius:50%;background:rgba(249,202,36,0.3);transform:translateY(-10px)"></div>
+                            </div>
+                        </div>
+                        <span class="card-label">Halo</span>
+                    </div>
+
+                    <div class="menu-card speedo-card-select" data-speedo="speedo-neon">
+                        <div class="card-preview" style="height:auto;padding:2px 0;">
+                            <div style="position:relative;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,0.5);">
+                                <svg viewBox="0 0 34 34" style="position:absolute;top:0;left:0;width:34px;height:34px;">
+                                    <circle cx="17" cy="17" r="13" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="3"/>
+                                    <circle cx="17" cy="17" r="13" fill="none" stroke="#a29bfe" stroke-width="3" stroke-linecap="round" stroke-dasharray="40 81.68" transform="rotate(-90,17,17)" style="filter:drop-shadow(0 0 3px #a29bfe)"/>
+                                </svg>
+                                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:8px;font-weight:700;color:#fff;">80</div>
+                            </div>
+                        </div>
+                        <span class="card-label">Neón</span>
+                    </div>
+
+                    <div class="menu-card speedo-card-select" data-speedo="speedo-samy">
+                        <div class="card-preview" style="height:auto;padding:2px 0;">
+                            <div style="display:flex;align-items:flex-end;gap:4px;">
+                                <div style="font-size:15px;font-weight:900;color:#fff;transform:skewX(-10deg);line-height:1;">80</div>
+                                <div style="display:flex;flex-direction:column;align-items:center;gap:2px;">
+                                    <div style="width:6px;height:16px;border-radius:3px;background:rgba(255,255,255,0.14);border:1px solid rgba(255,255,255,0.2);position:relative;overflow:hidden;">
+                                        <div style="position:absolute;left:0;right:0;bottom:0;height:70%;background:linear-gradient(to top,#b4773d,#eeab54);"></div>
+                                    </div>
+                                    <div style="width:8px;height:8px;border-radius:50%;background:#2ecc71;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="card-label">Samy</span>
+                    </div>
+
+                    <div class="menu-card speedo-card-select" data-speedo="speedo-race">
+                        <div class="card-preview" style="height:auto;padding:2px 0;">
+                            <div style="display:flex;flex-direction:column;gap:3px;background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:4px 6px;min-width:40px;">
+                                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:4px;">
+                                    <div style="font-size:12px;font-weight:800;color:#fff;line-height:1;">80</div>
+                                    <div style="font-size:6px;font-weight:700;color:rgba(255,255,255,0.75);background:rgba(255,255,255,0.1);border-radius:3px;padding:1px 2px;">3</div>
+                                </div>
+                                <div style="display:flex;gap:1px;">
+                                    <div style="flex:1;height:2px;background:rgba(255,255,255,0.8);"></div>
+                                    <div style="flex:1;height:2px;background:rgba(255,255,255,0.8);"></div>
+                                    <div style="flex:1;height:2px;background:rgba(255,255,255,0.8);"></div>
+                                    <div style="flex:1;height:2px;background:#fdcb6e;"></div>
+                                    <div style="flex:1;height:2px;background:#ff4757;"></div>
+                                    <div style="flex:1;height:2px;background:rgba(255,255,255,0.1);"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="card-label">Racing</span>
+                    </div>
+                </div>
+                <div class="menu-actions">
+                    <span class="menu-hint" id="speedo-preview-hint">Vista previa hasta guardar.</span>
+                    <button id="save-speedo-btn" class="menu-save-btn" disabled>Guardar velocímetro</button>
+                </div>
+            </div>
+
+            <div id="section-adjust" class="menu-section">
+                <h2 class="section-title">Ajuste de HUD</h2>
+                <p class="section-desc">Arrastra o redimensiona cada elemento a tu posición preferida.</p>
+
+                <div class="adjust-shell">
+                    <div class="adjust-row">
+                        <div class="adjust-copy">
+                            <span class="adjust-kicker">Layout</span>
+                            <span class="adjust-label">HUD Stats</span>
+                            <span class="adjust-note">Grupo completo o elementos individuales.</span>
+                        </div>
+                        <div class="adjust-btns">
+                            <button class="adj-btn" data-drag="stats-group">Mover conjunto</button>
+                            <button class="adj-btn" data-drag="stats-individual">Mover individual</button>
+                            <button class="adj-btn" data-resize="stats">Redimensionar</button>
+                        </div>
+                    </div>
+                    <div class="adjust-row">
+                        <div class="adjust-copy">
+                            <span class="adjust-kicker">Vehicle</span>
+                            <span class="adjust-label">Velocímetro</span>
+                            <span class="adjust-note">Ajuste rápido de posición y escala.</span>
+                        </div>
+                        <div class="adjust-btns">
+                            <button class="adj-btn" data-drag="speedo">Mover</button>
+                            <button class="adj-btn" data-resize="speedo">Redimensionar</button>
+                        </div>
+                    </div>
+                    <div class="adjust-footer">
+                        <span class="adjust-footer-note">Los modos activos se resaltan en azul.</span>
+                        <button class="adj-btn adj-reset" id="adj-reset-all">↺ Restablecer ajuste</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-config" class="menu-section">
+                <h2 class="section-title">Configuración</h2>
+
+                <div class="cfg-group">
+                    <div class="cfg-group-hd">Stats del jugador</div>
+                    <div class="cfg-row"><span class="cfg-lbl">Vida</span><label class="tog"><input type="checkbox" id="cfg-show-health" checked><span class="tog-track"></span></label></div>
+                    <div class="cfg-row"><span class="cfg-lbl">Escudo</span><label class="tog"><input type="checkbox" id="cfg-show-armour" checked><span class="tog-track"></span></label></div>
+                    <div class="cfg-row"><span class="cfg-lbl">Hambre</span><label class="tog"><input type="checkbox" id="cfg-show-hunger" checked><span class="tog-track"></span></label></div>
+                    <div class="cfg-row"><span class="cfg-lbl">Sed</span><label class="tog"><input type="checkbox" id="cfg-show-thirst" checked><span class="tog-track"></span></label></div>
+                    <div class="cfg-row"><span class="cfg-lbl">Stamina</span><label class="tog"><input type="checkbox" id="cfg-show-stamina" checked><span class="tog-track"></span></label></div>
+                    <div class="cfg-sep"></div>
+                    <div class="cfg-row"><span class="cfg-lbl">Ocultar escudo si está en 0</span><label class="tog"><input type="checkbox" id="cfg-hide-armour-0"><span class="tog-track"></span></label></div>
+                    <div class="cfg-row"><span class="cfg-lbl">Auto-ocultar stats</span><label class="tog"><input type="checkbox" id="cfg-auto-hide"><span class="tog-track"></span></label></div>
+                    <div class="cfg-sub" id="row-threshold" style="display:none;">
+                        <span class="cfg-lbl">Mostrar si baja del <b id="val-threshold">80</b>%</span>
+                        <input type="range" class="cfg-range" id="cfg-threshold" min="10" max="99" value="80">
+                    </div>
+                </div>
+
+                <div class="cfg-group">
+                    <div class="cfg-group-hd">Velocímetro</div>
+                    <div class="cfg-row">
+                        <span class="cfg-lbl">Unidades</span>
+                        <div class="cfg-seg" id="cfg-unit">
+                            <button class="seg active" data-v="kmh">km/h</button>
+                            <button class="seg" data-v="mph">mph</button>
+                        </div>
+                    </div>
+                    <div class="cfg-row">
+                        <span class="cfg-lbl">Vel. máx. gauge — <b id="val-maxspeed">200</b></span>
+                        <input type="range" class="cfg-range" id="cfg-maxspeed" min="160" max="320" step="40" value="200">
+                    </div>
+                    <div class="cfg-sep"></div>
+                    <div class="cfg-row"><span class="cfg-lbl">Intermitentes</span><label class="tog"><input type="checkbox" id="cfg-blinkers" checked><span class="tog-track"></span></label></div>
+                    <div class="cfg-row"><span class="cfg-lbl">Aviso de motor</span><label class="tog"><input type="checkbox" id="cfg-engine" checked><span class="tog-track"></span></label></div>
+                    <div class="cfg-row"><span class="cfg-lbl">Indicador de luces</span><label class="tog"><input type="checkbox" id="cfg-lights" checked><span class="tog-track"></span></label></div>
+                    <div class="cfg-row"><span class="cfg-lbl">Cinturón</span><label class="tog"><input type="checkbox" id="cfg-belt" checked><span class="tog-track"></span></label></div>
+                    <div class="cfg-row"><span class="cfg-lbl">Nivel de gasolina</span><label class="tog"><input type="checkbox" id="cfg-fuel" checked><span class="tog-track"></span></label></div>
+                </div>
+
+                <div class="cfg-group">
+                    <div class="cfg-group-hd">Visual</div>
+                    <div class="cfg-row">
+                        <span class="cfg-lbl">Escala — <b id="val-scale">100</b>%</span>
+                        <input type="range" class="cfg-range" id="cfg-scale" min="50" max="200" value="100">
+                    </div>
+                    <div class="cfg-row">
+                        <span class="cfg-lbl">Opacidad — <b id="val-opacity">100</b>%</span>
+                        <input type="range" class="cfg-range" id="cfg-opacity" min="10" max="100" value="100">
+                    </div>
+                    <div class="cfg-sep"></div>
+                    <div class="cfg-colors">
+                        <div class="cfg-color-row"><span class="cfg-lbl">Vida</span><input type="color" class="cfg-color" id="cfg-color-health" value="#ff4757"></div>
+                        <div class="cfg-color-row"><span class="cfg-lbl">Escudo</span><input type="color" class="cfg-color" id="cfg-color-armour" value="#0984e3"></div>
+                        <div class="cfg-color-row"><span class="cfg-lbl">Hambre</span><input type="color" class="cfg-color" id="cfg-color-hunger" value="#fdcb6e"></div>
+                        <div class="cfg-color-row"><span class="cfg-lbl">Sed</span><input type="color" class="cfg-color" id="cfg-color-thirst" value="#00cec9"></div>
+                        <div class="cfg-color-row"><span class="cfg-lbl">Stamina</span><input type="color" class="cfg-color" id="cfg-color-stamina" value="#6c5ce7"></div>
+                    </div>
+                    <div class="cfg-sep"></div>
+                    <div class="cfg-group-hd cfg-subhd">Velocímetro</div>
+                    <div class="cfg-colors">
+                        <div class="cfg-color-row"><span class="cfg-lbl">Barra principal</span><input type="color" class="cfg-color" id="cfg-color-speedo-primary" value="#55efc4"></div>
+                        <div class="cfg-color-row"><span class="cfg-lbl">Aviso</span><input type="color" class="cfg-color" id="cfg-color-speedo-warning" value="#fdcb6e"></div>
+                        <div class="cfg-color-row"><span class="cfg-lbl">Crítico</span><input type="color" class="cfg-color" id="cfg-color-speedo-danger" value="#ff4757"></div>
+                        <div class="cfg-color-row"><span class="cfg-lbl">Acento</span><input type="color" class="cfg-color" id="cfg-color-speedo-accent" value="#00d2ff"></div>
+                    </div>
+                    <button class="adj-btn adj-reset" id="cfg-colors-reset" style="margin-top:6px;width:100%;">↺ Restablecer colores</button>
+                </div>
+
+                <div class="cfg-group">
+                    <div class="cfg-group-hd">Comportamiento</div>
+                    <div class="cfg-row"><span class="cfg-lbl">Animación suave</span><label class="tog"><input type="checkbox" id="cfg-animate" checked><span class="tog-track"></span></label></div>
+                    <div class="cfg-row"><span class="cfg-lbl">Ocultar stats al entrar en vehículo</span><label class="tog"><input type="checkbox" id="cfg-hide-vehicle"><span class="tog-track"></span></label></div>
+                    <div class="cfg-row" id="row-manual-gears">
+                        <div><span class="cfg-lbl">Marchas manuales</span><div class="cfg-hint">Activa el sistema solo para tu personaje</div></div>
+                        <label class="tog"><input type="checkbox" id="cfg-manual-gears"><span class="tog-track"></span></label>
+                    </div>
+                </div>
+
+                <div class="cfg-group">
+                    <div class="cfg-group-hd">Extras</div>
+                    <div class="cfg-row">
+                        <div><span class="cfg-lbl">Modo streamer</span><div class="cfg-hint">Oculta los valores numéricos</div></div>
+                        <label class="tog"><input type="checkbox" id="cfg-streamer"><span class="tog-track"></span></label>
+                    </div>
+                    <div class="cfg-row">
+                        <div><span class="cfg-lbl">Modo cine</span><div class="cfg-hint">Barras negras arriba y abajo</div></div>
+                        <label class="tog"><input type="checkbox" id="cfg-cinema"><span class="tog-track"></span></label>
+                    </div>
+                    <div class="cfg-sub" id="row-cinema-size" style="display:none;">
+                        <span class="cfg-lbl">Tamaño barras — <b id="val-cinema">13</b>vh</span>
+                        <input type="range" class="cfg-range" id="cfg-cinema-size" min="5" max="25" value="13">
+                    </div>
+                    <div class="cfg-row">
+                        <div><span class="cfg-lbl">Ocultar HUD completo</span><div class="cfg-hint">Oculta el HUD y el minimapa</div></div>
+                        <label class="tog"><input type="checkbox" id="cfg-hide-hud"><span class="tog-track"></span></label>
+                    </div>
+                </div>
+
+                <div class="cfg-group">
+                    <div class="cfg-group-hd">Brújula</div>
+                    <div class="cfg-row">
+                        <span class="cfg-lbl">Brújula</span>
+                        <label class="tog"><input type="checkbox" id="cfg-compass" checked><span class="tog-track"></span></label>
+                    </div>
+                    <div class="cfg-row">
+                        <span class="cfg-lbl">Nombre de la calle</span>
+                        <label class="tog"><input type="checkbox" id="cfg-compass-street" checked><span class="tog-track"></span></label>
+                    </div>
+                </div>
+
+            </div>
+
+        </div></div>
+    </div>
+</div>
+
+<div id="compass">
+    <div id="compass-bar">
+        <div id="compass-window">
+            <div id="compass-track"></div>
+        </div>
+        <div id="compass-center"></div>
+        <div id="compass-deg">000°</div>
+    </div>
+    <div id="compass-street"></div>
+</div>
+
+<div id="oxygen-indicator">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+    <span class="oxy-num" id="oxygen-num">100</span>
+    <span class="oxy-unit">%</span>
+</div>
+
+<div id="voice-hud" data-style="voice-samy">
+    <div class="voice-style active" data-voice-style="voice-samy">
+        <div class="voice-samy-shell">
+            <div id="voice-samy-bar" class="voice-samy-bar silent"></div>
+        </div>
+    </div>
+
+    <div class="voice-style" data-voice-style="voice-origen">
+        <div class="voice-origen-shell">
+            <div class="voice-origen-row">
+                <div class="voice-origen-icon" id="voice-origen-radio">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 10h16v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/>
+                        <path d="M10 10 17 4"/>
+                        <path d="M8 16h.01M12 16h4"/>
+                    </svg>
+                </div>
+                <div class="voice-origen-steps">
+                    <span class="voice-origen-step" data-mode="whisper"></span>
+                    <span class="voice-origen-step" data-mode="normal"></span>
+                    <span class="voice-origen-step" data-mode="shout"></span>
+                </div>
+            </div>
+            <div class="voice-origen-copy">
+                <span class="voice-origen-label" id="voice-origen-label">Normal</span>
+                <span class="voice-origen-channel" id="voice-origen-channel"></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="hud">
+
+    <div id="stat-health" class="stat-container" data-stat="health" data-draggable="stat">
+        <div class="stat-item active" data-style="hud-boxes"><div class="stat-box glass"><div class="box-fill" data-stat="health"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div></div>
+        <div class="stat-item" data-style="hud-bars"><div class="stat-row"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><div class="bar-track"><div class="bar" id="health-bar"></div></div></div></div>
+        <div class="stat-item" data-style="hud-origen"><div class="origen-stat"><div class="origen-icon-wrap"><svg class="origen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div class="origen-track"><div class="origen-fill" data-stat="health"></div></div></div></div>
+        <div class="stat-item" data-style="hud-samy"><div class="samy-stat"><div class="samy-icon-wrap"><svg class="samy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div class="samy-track"><div class="samy-fill" data-stat="health"></div></div></div></div>
+        <div class="stat-item" data-style="hud-circles"><div class="stat-box circle"><div class="box-fill" data-stat="health"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div></div>
+        <div class="stat-item" data-style="hud-stars"><div class="stat-box star"><div class="box-fill" data-stat="health"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div></div>
+        <div class="stat-item" data-style="hud-diamonds"><div class="stat-box diamond"><div class="box-fill" data-stat="health"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div></div>
+        <div class="stat-item" data-style="hud-hex"><div class="stat-box hex"><div class="box-fill" data-stat="health"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div></div>
+        <div class="stat-item" data-style="hud-vbar"><div class="stat-box vbar"><div class="box-fill" data-stat="health"></div></div></div>
+        <div class="stat-item" data-style="hud-numbered"><div class="stat-box glass numbered"><div class="box-fill" data-stat="health"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span class="stat-num" data-stat="health">100</span></div></div>
+        <div class="stat-item" data-style="hud-pills"><div class="stat-box pill"><div class="box-fill" data-stat="health"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div></div>
+        <div class="stat-item" data-style="hud-icons"><svg class="icon-stat" viewBox="0 0 24 24"><defs><clipPath id="icp-health"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></clipPath></defs><g clip-path="url(#icp-health)"><rect width="24" height="24" fill="rgba(255,255,255,0.08)"/><rect id="ifr-health" x="0" y="24" width="24" height="0" fill="#ff4757"/></g><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.5"/></svg></div>
+        <div class="stat-item" data-style="hud-3d"><div class="stat-box glass box3d"><div class="box-fill" data-stat="health"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div></div>
+    </div>
+
+    <div id="stat-armour" class="stat-container" data-stat="armour" data-draggable="stat">
+        <div class="stat-item active" data-style="hud-boxes"><div class="stat-box glass"><div class="box-fill" data-stat="armour"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div></div>
+        <div class="stat-item" data-style="hud-bars"><div class="stat-row"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><div class="bar-track"><div class="bar" id="armour-bar"></div></div></div></div>
+        <div class="stat-item" data-style="hud-origen"><div class="origen-stat"><div class="origen-icon-wrap"><svg class="origen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="origen-track"><div class="origen-fill" data-stat="armour"></div></div></div></div>
+        <div class="stat-item" data-style="hud-samy"><div class="samy-stat"><div class="samy-icon-wrap"><svg class="samy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="samy-track"><div class="samy-fill" data-stat="armour"></div></div></div></div>
+        <div class="stat-item" data-style="hud-circles"><div class="stat-box circle"><div class="box-fill" data-stat="armour"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div></div>
+        <div class="stat-item" data-style="hud-stars"><div class="stat-box star"><div class="box-fill" data-stat="armour"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div></div>
+        <div class="stat-item" data-style="hud-diamonds"><div class="stat-box diamond"><div class="box-fill" data-stat="armour"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div></div>
+        <div class="stat-item" data-style="hud-hex"><div class="stat-box hex"><div class="box-fill" data-stat="armour"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div></div>
+        <div class="stat-item" data-style="hud-vbar"><div class="stat-box vbar"><div class="box-fill" data-stat="armour"></div></div></div>
+        <div class="stat-item" data-style="hud-numbered"><div class="stat-box glass numbered"><div class="box-fill" data-stat="armour"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span class="stat-num" data-stat="armour">0</span></div></div>
+        <div class="stat-item" data-style="hud-pills"><div class="stat-box pill"><div class="box-fill" data-stat="armour"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div></div>
+        <div class="stat-item" data-style="hud-icons"><svg class="icon-stat" viewBox="0 0 24 24"><defs><clipPath id="icp-armour"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></clipPath></defs><g clip-path="url(#icp-armour)"><rect width="24" height="24" fill="rgba(255,255,255,0.08)"/><rect id="ifr-armour" x="0" y="24" width="24" height="0" fill="#0984e3"/></g><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.5"/></svg></div>
+        <div class="stat-item" data-style="hud-3d"><div class="stat-box glass box3d"><div class="box-fill" data-stat="armour"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div></div>
+    </div>
+
+    <div id="stat-hunger" class="stat-container" data-stat="hunger" data-draggable="stat">
+        <div class="stat-item active" data-style="hud-boxes"><div class="stat-box glass"><div class="box-fill" data-stat="hunger"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div></div>
+        <div class="stat-item" data-style="hud-bars"><div class="stat-row"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg><div class="bar-track"><div class="bar" id="hunger-bar"></div></div></div></div>
+        <div class="stat-item" data-style="hud-origen"><div class="origen-stat"><div class="origen-icon-wrap"><svg class="origen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div><div class="origen-track"><div class="origen-fill" data-stat="hunger"></div></div></div></div>
+        <div class="stat-item" data-style="hud-samy"><div class="samy-stat"><div class="samy-icon-wrap"><svg class="samy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div><div class="samy-track"><div class="samy-fill" data-stat="hunger"></div></div></div></div>
+        <div class="stat-item" data-style="hud-circles"><div class="stat-box circle"><div class="box-fill" data-stat="hunger"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div></div>
+        <div class="stat-item" data-style="hud-stars"><div class="stat-box star"><div class="box-fill" data-stat="hunger"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div></div>
+        <div class="stat-item" data-style="hud-diamonds"><div class="stat-box diamond"><div class="box-fill" data-stat="hunger"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div></div>
+        <div class="stat-item" data-style="hud-hex"><div class="stat-box hex"><div class="box-fill" data-stat="hunger"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div></div>
+        <div class="stat-item" data-style="hud-vbar"><div class="stat-box vbar"><div class="box-fill" data-stat="hunger"></div></div></div>
+        <div class="stat-item" data-style="hud-numbered"><div class="stat-box glass numbered"><div class="box-fill" data-stat="hunger"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg><span class="stat-num" data-stat="hunger">100</span></div></div>
+        <div class="stat-item" data-style="hud-pills"><div class="stat-box pill"><div class="box-fill" data-stat="hunger"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div></div>
+        <div class="stat-item" data-style="hud-icons"><svg class="icon-stat" viewBox="0 0 24 24"><defs><clipPath id="icp-hunger"><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></clipPath></defs><g clip-path="url(#icp-hunger)"><rect width="24" height="24" fill="rgba(255,255,255,0.08)"/><rect id="ifr-hunger" x="0" y="24" width="24" height="0" fill="#fdcb6e"/></g><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.5"/></svg></div>
+        <div class="stat-item" data-style="hud-3d"><div class="stat-box glass box3d"><div class="box-fill" data-stat="hunger"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div></div>
+    </div>
+
+    <div id="stat-thirst" class="stat-container" data-stat="thirst" data-draggable="stat">
+        <div class="stat-item active" data-style="hud-boxes"><div class="stat-box glass"><div class="box-fill" data-stat="thirst"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div></div>
+        <div class="stat-item" data-style="hud-bars"><div class="stat-row"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg><div class="bar-track"><div class="bar" id="thirst-bar"></div></div></div></div>
+        <div class="stat-item" data-style="hud-origen"><div class="origen-stat"><div class="origen-icon-wrap"><svg class="origen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div><div class="origen-track"><div class="origen-fill" data-stat="thirst"></div></div></div></div>
+        <div class="stat-item" data-style="hud-samy"><div class="samy-stat"><div class="samy-icon-wrap"><svg class="samy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div><div class="samy-track"><div class="samy-fill" data-stat="thirst"></div></div></div></div>
+        <div class="stat-item" data-style="hud-circles"><div class="stat-box circle"><div class="box-fill" data-stat="thirst"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div></div>
+        <div class="stat-item" data-style="hud-stars"><div class="stat-box star"><div class="box-fill" data-stat="thirst"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div></div>
+        <div class="stat-item" data-style="hud-diamonds"><div class="stat-box diamond"><div class="box-fill" data-stat="thirst"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div></div>
+        <div class="stat-item" data-style="hud-hex"><div class="stat-box hex"><div class="box-fill" data-stat="thirst"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div></div>
+        <div class="stat-item" data-style="hud-vbar"><div class="stat-box vbar"><div class="box-fill" data-stat="thirst"></div></div></div>
+        <div class="stat-item" data-style="hud-numbered"><div class="stat-box glass numbered"><div class="box-fill" data-stat="thirst"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg><span class="stat-num" data-stat="thirst">100</span></div></div>
+        <div class="stat-item" data-style="hud-pills"><div class="stat-box pill"><div class="box-fill" data-stat="thirst"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div></div>
+        <div class="stat-item" data-style="hud-icons"><svg class="icon-stat" viewBox="0 0 24 24"><defs><clipPath id="icp-thirst"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></clipPath></defs><g clip-path="url(#icp-thirst)"><rect width="24" height="24" fill="rgba(255,255,255,0.08)"/><rect id="ifr-thirst" x="0" y="24" width="24" height="0" fill="#00cec9"/></g><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.5"/></svg></div>
+        <div class="stat-item" data-style="hud-3d"><div class="stat-box glass box3d"><div class="box-fill" data-stat="thirst"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div></div>
+    </div>
+
+    <div id="stat-stamina" class="stat-container" data-stat="stamina" data-draggable="stat">
+        <div class="stat-item active" data-style="hud-boxes"><div class="stat-box glass"><div class="box-fill" data-stat="stamina"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div></div>
+        <div class="stat-item" data-style="hud-bars"><div class="stat-row"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><div class="bar-track"><div class="bar" id="stamina-bar"></div></div></div></div>
+        <div class="stat-item" data-style="hud-origen"><div class="origen-stat"><div class="origen-icon-wrap"><svg class="origen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="origen-track"><div class="origen-fill" data-stat="stamina"></div></div></div></div>
+        <div class="stat-item" data-style="hud-samy"><div class="samy-stat"><div class="samy-icon-wrap"><svg class="samy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="samy-track"><div class="samy-fill" data-stat="stamina"></div></div></div></div>
+        <div class="stat-item" data-style="hud-circles"><div class="stat-box circle"><div class="box-fill" data-stat="stamina"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div></div>
+        <div class="stat-item" data-style="hud-stars"><div class="stat-box star"><div class="box-fill" data-stat="stamina"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div></div>
+        <div class="stat-item" data-style="hud-diamonds"><div class="stat-box diamond"><div class="box-fill" data-stat="stamina"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div></div>
+        <div class="stat-item" data-style="hud-hex"><div class="stat-box hex"><div class="box-fill" data-stat="stamina"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div></div>
+        <div class="stat-item" data-style="hud-vbar"><div class="stat-box vbar"><div class="box-fill" data-stat="stamina"></div></div></div>
+        <div class="stat-item" data-style="hud-numbered"><div class="stat-box glass numbered"><div class="box-fill" data-stat="stamina"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><span class="stat-num" data-stat="stamina">100</span></div></div>
+        <div class="stat-item" data-style="hud-pills"><div class="stat-box pill"><div class="box-fill" data-stat="stamina"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div></div>
+        <div class="stat-item" data-style="hud-icons"><svg class="icon-stat" viewBox="0 0 24 24"><defs><clipPath id="icp-stamina"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></clipPath></defs><g clip-path="url(#icp-stamina)"><rect width="24" height="24" fill="rgba(255,255,255,0.08)"/><rect id="ifr-stamina" x="0" y="24" width="24" height="0" fill="#6c5ce7"/></g><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.5"/></svg></div>
+        <div class="stat-item" data-style="hud-3d"><div class="stat-box glass box3d"><div class="box-fill" data-stat="stamina"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div></div>
+    </div>
+
+</div>
+
+<div id="speedo">
+
+    <div id="speedo-minimal" class="speedo-panel active">
+
+        <div class="si-blink" id="sm-blink-l">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z" transform="scale(-1,1) translate(-24,0)"/></svg>
+        </div>
+
+        <div class="status-row">
+            <div class="si-icon" id="sm-belt">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 12V7"/><path d="M8 16c0 2.2 1.8 4 4 4s4-1.8 4-4"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>
+            </div>
+            <div class="si-icon" id="sm-engine">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M18 9h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"/><path d="M6 7V5"/><path d="M10 7V5"/></svg>
+            </div>
+            <div class="si-icon" id="sm-light">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+            </div>
+            <div class="si-icon" id="sm-fuel">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/><path d="M3 11h12"/><path d="M17 7h1a2 2 0 0 1 2 2v5a1 1 0 0 0 2 0V9l-2-2"/></svg>
+            </div>
+        </div>
+
+        <div class="speed-block">
+            <span class="speedo-num">0</span>
+            <span class="speedo-unit">km/h</span>
+        </div>
+
+        <div class="fuel-track"><div class="fuel-fill" id="sm-fuel-fill"></div></div>
+
+        <div class="si-blink" id="sm-blink-r">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z"/></svg>
+        </div>
+    </div>
+
+    <div id="speedo-card" class="speedo-panel">
+        <div class="indicators-row">
+            <div class="si-blink" id="sc-blink-l">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z" transform="scale(-1,1) translate(-24,0)"/></svg>
+            </div>
+            <div class="center-icons">
+                <div class="si-icon" id="sc-belt">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 12V7"/><path d="M8 16c0 2.2 1.8 4 4 4s4-1.8 4-4"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>
+                </div>
+                <div class="si-icon" id="sc-engine">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M18 9h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"/><path d="M6 7V5"/><path d="M10 7V5"/></svg>
+                </div>
+                <div class="si-icon" id="sc-light">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+                </div>
+            </div>
+            <div class="si-blink" id="sc-blink-r">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z"/></svg>
+            </div>
+        </div>
+        <div class="speed-block">
+            <span class="speedo-num">0</span>
+            <span class="speedo-unit">km/h</span>
+        </div>
+        <div class="fuel-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/><path d="M3 11h12"/><path d="M17 7h1a2 2 0 0 1 2 2v5a1 1 0 0 0 2 0V9l-2-2"/></svg>
+            <div class="fuel-track"><div class="fuel-fill" id="sc-fuel-fill"></div></div>
+            <div class="si-icon" id="sc-fuel-icon" style="flex-shrink:0">
+                <svg viewBox="0 0 24 24" fill="currentColor" style="width:9px;height:9px"><circle cx="12" cy="12" r="10"/></svg>
+            </div>
+        </div>
+    </div>
+
+    <div id="speedo-dash" class="speedo-panel">
+        <div class="top-row">
+            <div class="speed-block">
+                <span class="speedo-num">0</span>
+                <span class="speedo-unit">km/h</span>
+            </div>
+            <div class="right-icons">
+                <div class="icons-row">
+                    <div class="si-icon" id="sd-belt">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 12V7"/><path d="M8 16c0 2.2 1.8 4 4 4s4-1.8 4-4"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>
+                    </div>
+                    <div class="si-icon" id="sd-engine">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M18 9h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"/><path d="M6 7V5"/><path d="M10 7V5"/></svg>
+                    </div>
+                    <div class="si-icon" id="sd-light">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom-row">
+            <div class="si-blink" id="sd-blink-l">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z" transform="scale(-1,1) translate(-24,0)"/></svg>
+            </div>
+            <div class="fuel-track"><div class="fuel-fill" id="sd-fuel-fill"></div></div>
+            <div class="si-blink" id="sd-blink-r">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z"/></svg>
+            </div>
+        </div>
+    </div>
+
+    <div id="speedo-gauge" class="speedo-panel">
+        <svg id="gauge-svg" viewBox="0 0 200 170">
+            <defs>
+                <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop id="gauge-grad-start" offset="0%"   stop-color="#55efc4"/>
+                    <stop id="gauge-grad-mid" offset="60%"  stop-color="#fdcb6e"/>
+                    <stop id="gauge-grad-end" offset="100%" stop-color="#ff4757"/>
+                </linearGradient>
+            </defs>
+
+            <circle cx="100" cy="100" r="88" fill="rgba(0,0,0,0.45)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+            <path d="M 46.97 153.03 A 75 75 0 1 1 153.03 153.03" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8" stroke-linecap="round"/>
+
+            <path id="gauge-fill" d="M 46.97 153.03 A 75 75 0 1 1 153.03 153.03" fill="none" stroke="url(#gaugeGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="353.43 353.43" stroke-dashoffset="353.43"/>
+
+            <g id="gauge-ticks"></g>
+
+            <line id="gauge-needle" x1="100" y1="100" x2="100" y2="35" stroke="rgba(255,255,255,0.95)" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="100" cy="100" r="6" fill="rgba(255,255,255,0.9)"/>
+            <circle cx="100" cy="100" r="3" fill="rgba(0,0,0,0.7)"/>
+        </svg>
+        <div id="gauge-speed-display">
+            <span class="speedo-num">0</span>
+            <span class="speedo-unit">km/h</span>
+        </div>
+        <div id="gauge-indicators">
+            <div class="si-blink" id="sg-blink-l"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z" transform="scale(-1,1) translate(-24,0)"/></svg></div>
+            <div class="si-icon" id="sg-belt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 12V7"/><path d="M8 16c0 2.2 1.8 4 4 4s4-1.8 4-4"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></div>
+            <div class="si-icon" id="sg-engine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M18 9h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"/><path d="M6 7V5"/><path d="M10 7V5"/></svg></div>
+            <div class="si-icon" id="sg-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div>
+            <div class="fuel-track" style="width:50px;"><div class="fuel-fill" id="sg-fuel-fill"></div></div>
+            <div class="si-blink" id="sg-blink-r"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z"/></svg></div>
+        </div>
+    </div>
+
+    <div id="speedo-arc" class="speedo-panel">
+        <div class="arc-content" style="position:relative;height:80px;">
+            <svg viewBox="0 0 170 90" style="width:170px;height:90px;overflow:visible;">
+                <path d="M 12 85 A 73 73 0 0 1 158 85" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8" stroke-linecap="round"/>
+                <path id="arc-fill" d="M 12 85 A 73 73 0 0 1 158 85" fill="none" stroke="url(#arcGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="228.9 228.9" stroke-dashoffset="228.9" style="transition:stroke-dashoffset 0.12s linear"/>
+                <defs><linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop id="arc-grad-start" offset="0%" stop-color="#55efc4"/><stop id="arc-grad-mid" offset="60%" stop-color="#fdcb6e"/><stop id="arc-grad-end" offset="100%" stop-color="#ff4757"/></linearGradient></defs>
+            </svg>
+            <div class="arc-speed" style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);text-align:center;">
+                <span class="speedo-num" style="font-size:32px;font-weight:800;color:#fff;text-shadow:0 0 10px rgba(0,210,255,0.4);">0</span>
+                <span class="speedo-unit" style="display:block;font-size:9px;color:rgba(255,255,255,0.4);">km/h</span>
+            </div>
+        </div>
+        <div class="bottom-row" style="display:flex;align-items:center;gap:8px;padding:0 12px;">
+            <div class="si-blink" id="sa-blink-l"><svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px;"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z" transform="scale(-1,1) translate(-24,0)"/></svg></div>
+            <div class="si-icon" id="sa-belt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 12V7"/><path d="M8 16c0 2.2 1.8 4 4 4s4-1.8 4-4"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></div>
+            <div class="si-icon" id="sa-engine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M18 9h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"/><path d="M6 7V5"/><path d="M10 7V5"/></svg></div>
+            <div class="si-icon" id="sa-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:11px;height:11px;"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div>
+            <div class="fuel-track" style="flex:1;"><div class="fuel-fill" id="sa-fuel-fill"></div></div>
+            <div class="si-blink" id="sa-blink-r"><svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px;"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z"/></svg></div>
+        </div>
+    </div>
+
+    <div id="speedo-cyber" class="speedo-panel" style="position:relative;">
+        <div class="cyber-top">
+            <div>
+                <span class="speedo-num">0</span>
+                <span class="speedo-unit" style="display:block;margin-top:-4px;">km/h</span>
+            </div>
+            <div class="cyber-icons">
+                <div class="icons-row">
+                    <div class="si-icon" id="scy-belt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 12V7"/><path d="M8 16c0 2.2 1.8 4 4 4s4-1.8 4-4"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></div>
+                    <div class="si-icon" id="scy-engine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M18 9h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"/><path d="M6 7V5"/><path d="M10 7V5"/></svg></div>
+                    <div class="si-icon" id="scy-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div>
+                </div>
+            </div>
+        </div>
+        <div class="cyber-bottom">
+            <div class="si-blink" id="scy-blink-l"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z" transform="scale(-1,1) translate(-24,0)"/></svg></div>
+            <div class="fuel-track"><div class="fuel-fill" id="scy-fuel-fill"></div></div>
+            <div class="si-blink" id="scy-blink-r"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z"/></svg></div>
+        </div>
+    </div>
+
+    <div id="speedo-bars" class="speedo-panel">
+        <div class="bars-top">
+            <div>
+                <span class="speedo-num">0</span>
+                <span class="speedo-unit" style="margin-left:3px;">km/h</span>
+            </div>
+            <div class="bars-icons">
+                <div class="si-icon" id="sb-belt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 12V7"/><path d="M8 16c0 2.2 1.8 4 4 4s4-1.8 4-4"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></div>
+                <div class="si-icon" id="sb-engine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M18 9h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"/><path d="M6 7V5"/><path d="M10 7V5"/></svg></div>
+                <div class="si-icon" id="sb-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div>
+            </div>
+        </div>
+        <div class="speed-bar-grid" id="speed-bar-grid"></div>
+        <div class="bottom-row">
+            <div class="si-blink" id="sb-blink-l"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z" transform="scale(-1,1) translate(-24,0)"/></svg></div>
+            <div class="fuel-track"><div class="fuel-fill" id="sb-fuel-fill"></div></div>
+            <div class="si-blink" id="sb-blink-r"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z"/></svg></div>
+        </div>
+    </div>
+
+    <div id="speedo-corner" class="speedo-panel">
+        <div style="display:flex;align-items:baseline;gap:3px;">
+            <span class="speedo-num">0</span>
+        </div>
+        <span class="speedo-unit" style="font-size:8px;font-weight:600;color:#ff4757;letter-spacing:2px;">KM/H</span>
+        <div class="corner-indicators">
+            <div class="si-blink" id="sc2-blink-l"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z" transform="scale(-1,1) translate(-24,0)"/></svg></div>
+            <div class="si-icon" id="sc2-belt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 12V7"/><path d="M8 16c0 2.2 1.8 4 4 4s4-1.8 4-4"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></div>
+            <div class="si-icon" id="sc2-engine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M18 9h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"/><path d="M6 7V5"/><path d="M10 7V5"/></svg></div>
+            <div class="si-icon" id="sc2-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div>
+            <div class="si-blink" id="sc2-blink-r"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z"/></svg></div>
+        </div>
+        <div class="fuel-track"><div class="fuel-fill" id="sc2-fuel-fill"></div></div>
+    </div>
+
+    <div id="speedo-halo" class="speedo-panel">
+
+        <div class="halo-item">
+            <div class="hi-icon si-blink" id="sh-blink-l"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z" transform="scale(-1,1) translate(-24,0)"/></svg></div>
+        </div>
+
+        <div class="halo-item">
+            <div class="hi-icon si-icon" id="sh-belt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 12V7"/><path d="M8 16c0 2.2 1.8 4 4 4s4-1.8 4-4"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></div>
+            <span class="hi-label">belt</span>
+        </div>
+
+        <div class="halo-item">
+            <div class="hi-icon si-icon" id="sh-engine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M18 9h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"/><path d="M6 7V5"/><path d="M10 7V5"/></svg></div>
+            <span class="hi-label">eng</span>
+        </div>
+
+        <div class="halo-item halo-center">
+            <span class="speedo-num">0</span>
+            <span class="speedo-unit">km/h</span>
+        </div>
+
+        <div class="halo-item">
+            <div class="hi-icon si-icon" id="sh-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div>
+            <span class="hi-label">luz</span>
+        </div>
+
+        <div class="halo-item">
+            <div class="hi-icon si-icon" id="sh-fuel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/><path d="M3 11h12"/><path d="M17 7h1a2 2 0 0 1 2 2v5a1 1 0 0 0 2 0V9l-2-2"/></svg></div>
+            <span class="hi-label" id="sh-fuel-num" style="font-size:8px;font-weight:700;color:rgba(255,255,255,0.80);letter-spacing:0;">100%</span>
+        </div>
+
+        <div class="halo-item">
+            <div class="hi-icon si-blink" id="sh-blink-r"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z"/></svg></div>
+        </div>
+    </div>
+
+    <div id="speedo-neon" class="speedo-panel">
+        <svg viewBox="0 0 170 170">
+            <circle cx="85" cy="85" r="72" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="6"/>
+            <circle id="neon-ring" cx="85" cy="85" r="72" fill="none" stroke="#a29bfe" stroke-width="6" stroke-linecap="round" stroke-dasharray="0 452.39" transform="rotate(-90, 85, 85)" style="filter:drop-shadow(0 0 6px #a29bfe);"/>
+        </svg>
+        <div id="neon-center">
+            <span class="speedo-num">0</span>
+            <span class="speedo-unit">km/h</span>
+        </div>
+        <div id="neon-indicators">
+            <div class="si-blink" id="sn-blink-l"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z" transform="scale(-1,1) translate(-24,0)"/></svg></div>
+            <div class="si-icon" id="sn-belt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 12V7"/><path d="M8 16c0 2.2 1.8 4 4 4s4-1.8 4-4"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></div>
+            <div class="si-icon" id="sn-engine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M18 9h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"/><path d="M6 7V5"/><path d="M10 7V5"/></svg></div>
+            <div class="si-icon" id="sn-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div>
+            <div class="fuel-track" style="width:50px;"><div class="fuel-fill" id="sn-fuel-fill"></div></div>
+            <div class="si-blink" id="sn-blink-r"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z"/></svg></div>
+        </div>
+    </div>
+
+    <div id="speedo-samy" class="speedo-panel">
+        <div class="samy-speed-main">
+            <div class="samy-speed-copy">
+                <span class="speedo-unit">km/h</span>
+                <span class="speedo-num">0</span>
+            </div>
+            <div class="samy-side-stack">
+                <div class="si-icon" id="ss-belt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 12V7"/><path d="M8 16c0 2.2 1.8 4 4 4s4-1.8 4-4"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></div>
+                <div class="fuel-track fuel-track-vert samy-fuel-track">
+                    <div class="fuel-fill-vert" id="ss-fuel-fill"></div>
+                </div>
+                <div class="si-icon samy-fuel-icon" id="ss-fuel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/><path d="M3 11h12"/><path d="M17 7h1a2 2 0 0 1 2 2v5a1 1 0 0 0 2 0V9l-2-2"/></svg></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="speedo-race" class="speedo-panel">
+        <div class="race-top">
+            <div class="race-speed-copy">
+                <span class="speedo-num">0</span>
+                <span class="speedo-unit">km/h</span>
+            </div>
+            <div class="race-gear-box" id="sr-gear">N</div>
+        </div>
+        <div class="race-rpm-bar">
+            <div class="race-rpm-fill" id="sr-rpm-fill"></div>
+            <div class="race-rpm-segments">
+                <div class="race-rpm-seg"></div>
+                <div class="race-rpm-seg"></div>
+                <div class="race-rpm-seg"></div>
+                <div class="race-rpm-seg"></div>
+                <div class="race-rpm-seg"></div>
+                <div class="race-rpm-seg"></div>
+                <div class="race-rpm-seg"></div>
+                <div class="race-rpm-seg"></div>
+                <div class="race-rpm-seg"></div>
+                <div class="race-rpm-seg"></div>
+            </div>
+        </div>
+        <div class="race-bottom">
+            <div class="race-icons">
+                <div class="si-blink" id="sr-blink-l"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z" transform="scale(-1,1) translate(-24,0)"/></svg></div>
+                <div class="si-icon" id="sr-belt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 12V7"/><path d="M8 16c0 2.2 1.8 4 4 4s4-1.8 4-4"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg></div>
+                <div class="si-icon" id="sr-engine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M18 9h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"/><path d="M6 7V5"/><path d="M10 7V5"/></svg></div>
+                <div class="si-icon" id="sr-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div>
+                <div class="si-blink" id="sr-blink-r"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 19V5l-7 7 7 7zm2-14v14l7-7-7-7z"/></svg></div>
+            </div>
+            <div class="race-fuel-wrap fuel-track fuel-track-vert">
+                <div class="fuel-fill-vert" id="sr-fuel-fill"></div>
+            </div>
+            <div class="race-fuel-copy fuel-copy">
+                <svg class="race-fuel-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/><path d="M3 11h12"/><path d="M17 7h1a2 2 0 0 1 2 2v5a1 1 0 0 0 2 0V9l-2-2"/></svg>
+                <span id="sr-fuel-text">100%</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="speedo-bike" class="speedo-panel">
+        <div class="speed-block">
+            <span class="speedo-num">0</span>
+            <span class="speedo-unit">km/h</span>
+        </div>
+    </div>
+
+    <div id="speedo-boat" class="speedo-panel">
+        <div style="display:flex;flex-direction:column;align-items:center;line-height:1;">
+            <span class="speedo-num">0</span>
+            <span class="speedo-unit">km/h</span>
+        </div>
+        <div class="boat-compass">
+            <span class="compass-deg" id="boat-hdg-deg">000°</span>
+            <span class="compass-dir" id="boat-hdg-dir">N</span>
+        </div>
+        <div class="boat-indicators">
+            <div class="si-icon" id="sbt-engine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M18 9h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"/><path d="M6 7V5"/><path d="M10 7V5"/></svg></div>
+            <div class="si-icon" id="sbt-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div>
+            <div class="fuel-track"><div class="fuel-fill" id="sbt-fuel-fill"></div></div>
+        </div>
+    </div>
+
+    <div id="speedo-air" class="speedo-panel">
+        <div class="air-header">
+            <span class="air-type-badge" id="air-type-badge">HELI</span>
+            <div class="air-icons">
+                <div class="si-icon" id="sai-engine"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="16" height="10" rx="2"/><path d="M18 9h2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2"/><path d="M6 7V5"/><path d="M10 7V5"/></svg></div>
+                <div class="si-icon" id="sai-light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg></div>
+            </div>
+        </div>
+        <div class="air-main">
+            <div class="air-col">
+                <span class="air-label">vel</span>
+                <span class="speedo-num">0</span>
+                <span class="speedo-unit">km/h</span>
+            </div>
+            <div class="air-vsi">
+                <div class="vsi-track">
+                    <div class="vsi-zero"></div>
+                    <div class="vsi-fill" id="air-vsi-fill"></div>
+                </div>
+                <span class="air-vert" id="air-vert">0</span>
+                <span class="air-label">m/s</span>
+            </div>
+            <div class="air-col">
+                <span class="air-label">altitud</span>
+                <span class="air-value" id="air-alt">0 m</span>
+                <span class="air-sub" id="air-agl">AGL 0 m</span>
+            </div>
+        </div>
+        <div class="air-footer">
+            <span class="air-label">rumbo</span>
+            <span class="air-hdg-val" id="air-hdg">000° N</span>
+        </div>
+    </div>
+
+</div>
+<div id="cinema-top"></div>
+<div id="cinema-bottom"></div>
+<img id="hx-logo" src="../assets/logo.png" style="position:fixed;top:16px;right:16px;width:80px;height:auto;opacity:0.5;pointer-events:none;z-index:9999;" />
+<script src="js/state.js"></script>
+<script src="js/menu.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/config.js"></script>
+<script src="js/render.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
