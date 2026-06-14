@@ -1,7 +1,7 @@
 Config = Config or {}
 
 -- ─── Idioma ────────────────────────────────────────────────────────────────────
-Config.Language = 'es'   -- 'es' | 'en' | 'ru' | 'fr' | 'cn' | 'jp'
+Config.Language = 'es'   -- 'es' | 'en' | 'fr' | 'de' | 'ru' | 'jp' | 'cn'
 Config.Locale = Config.Language -- compatibilidad interna
 
 -- ─── Framework / Inventario ───────────────────────────────────────────────────

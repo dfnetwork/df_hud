@@ -4,6 +4,7 @@ local frameworkAdapter = nil
 local inventoryAdapter = nil
 local manualGearsPreferences = {}
 local MANUAL_GEARS_PREFS_FILE = 'data/manual_gears_prefs.json'
+local EXPECTED_RESOURCE_NAME = 'df_hud'
 
 local function normalizePercent(value)
     local numeric = tonumber(value)
@@ -162,6 +163,7 @@ local function printStartupBanner(versionSummary)
     local resourceName = GetCurrentResourceName()
     local localVersion = GetResourceMetadata(resourceName, 'version', 0) or '0.0.0'
     local customSupportEnabled = framework == 'custom' or inventory == 'custom'
+    local renamedResource = resourceName ~= EXPECTED_RESOURCE_NAME
 
     print(tr('debug-banner-line', '========================================================'))
     print(('[%s]'):format(resourceName))
@@ -193,6 +195,16 @@ local function printStartupBanner(versionSummary)
         tr('debug-updates', 'Updates'),
         Config.Updates.repoUrl
     ))
+    print(('* %s: %s'):format(
+        tr('debug-resource-name', 'Required resource name'),
+        tr('debug-resource-rename-note', 'This resource cannot be renamed and must be called df_hud')
+    ))
+    if renamedResource then
+        print(('* %s: %s'):format(
+            tr('debug-warning', 'Warning'),
+            tr('debug-resource-rename-error', 'Invalid resource name detected. Rename the folder/resource back to df_hud or it will not work correctly')
+        ))
+    end
     if customSupportEnabled then
         print(('* %s: %s'):format(
             tr('debug-support', 'Support'),
@@ -200,6 +212,21 @@ local function printStartupBanner(versionSummary)
         ))
     end
     print(tr('debug-banner-line', '========================================================'))
+end
+
+local function enforceExpectedResourceName()
+    local resourceName = GetCurrentResourceName()
+    if resourceName == EXPECTED_RESOURCE_NAME then
+        return true
+    end
+
+    local localVersion = GetResourceMetadata(resourceName, 'version', 0) or '0.0.0'
+    printStartupBanner(('%s | %s'):format(
+        localVersion,
+        tr('debug-resource-stop', 'Resource stopped due to invalid resource name')
+    ))
+    StopResource(resourceName)
+    return false
 end
 
 local function checkRemoteVersionAndPrint()
@@ -258,6 +285,10 @@ end)
 
 AddEventHandler('onResourceStart', function(resourceName)
     if resourceName ~= GetCurrentResourceName() then
+        return
+    end
+
+    if not enforceExpectedResourceName() then
         return
     end
 
