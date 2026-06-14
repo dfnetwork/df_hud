@@ -2,7 +2,7 @@
 
 # HX HUD
 
-**A modern, fully customizable HUD for FiveM (QBX/QBCore)**
+**A modern, fully customizable HUD for FiveM**
 
 [![Language](https://img.shields.io/badge/Lua-5.4-blue?style=flat-square&logo=lua)](https://www.lua.org/)
 [![Framework](https://img.shields.io/badge/QBX__Core-compatible-green?style=flat-square)](https://github.com/Qbox-project/qbx_core)
@@ -22,7 +22,7 @@
 
 ## Descripción
 
-**HX HUD** es un sistema de interfaz de usuario (HUD) moderno y completamente personalizable para servidores de FiveM basados en **QBX Core / QBCore**. Ofrece múltiples estilos visuales, un velocímetro avanzado, brújula superior, indicadores de vehículo y un menú de configuración en tiempo real accesible directamente desde el juego.
+**HX HUD** es un sistema de interfaz de usuario (HUD) moderno y completamente personalizable para servidores de FiveM. Incluye soporte para **QBX, QBCore, ESX, Mythic Framework, ND Framework y ox_core**, además de una capa configurable para **vRP/vRPex** cuando el fork no expone una API homogénea. Ofrece múltiples estilos visuales, un velocímetro avanzado, brújula superior, indicadores de vehículo y un menú de configuración en tiempo real accesible directamente desde el juego.
 
 ---
 
@@ -48,8 +48,8 @@
 | Recurso | Obligatorio |
 |---|---|
 | [ox_lib](https://github.com/overextended/ox_lib) | ✅ Sí |
-| [qbx_core](https://github.com/Qbox-project/qbx_core) o [qb-core](https://github.com/qbcore-framework/qb-core) | ✅ Sí, uno de los dos |
-| [ox_inventory](https://github.com/overextended/ox_inventory), [qb-inventory](https://github.com/qbcore-framework/qb-inventory) o [origen_inventory](https://docs.origennetwork.com/scripts/origen_inventory) | ✅ Sí, uno de los tres para el minimapa |
+| Framework compatible: `qbx_core`, `qb-core`, `es_extended`, `mythic-base`, `ND_Core`, `ox_core`, `vrp` | ✅ Sí, uno de ellos |
+| Inventario compatible: `ox_inventory`, `qs-inventory`, `qb-inventory`, `ps-inventory`, `codem-inventory`, `core_inventory`, `ak47_inventory`, `esx_inventory`, `esx_inventoryhud`, `origen_inventory`, `mythic-inventory`, `ND_Core`, `vrp`, `custom` | ✅ Sí, uno de ellos para el minimapa |
 
 ---
 
@@ -67,7 +67,7 @@
 
 ```lua
 Config.Language = 'es'   -- Idioma del menú: 'es' | 'en' | 'ru' | 'fr' | 'cn' | 'jp'
-Config.Framework = 'auto'   -- 'auto' | 'qbx' | 'qbcore'
+Config.Framework = 'auto'   -- 'auto' | 'qbx' | 'qbcore' | 'esx' | 'mythic' | 'nd' | 'ox' | 'vrp' | 'vrpex'
 ```
 
 ### Stats
@@ -95,8 +95,21 @@ Config.Blinker = {
 ```lua
 Config.Minimap = {
     item          = 'phone',   -- Ítem requerido para ver el minimapa a pie
-    inventory     = 'auto',    -- 'auto' | 'ox_inventory' | 'qb-inventory' | 'origen_inventory'
+    inventory     = 'auto',    -- legado: fallback si Config.Inventory está en auto
     checkInterval = 2000,      -- ms entre comprobaciones del inventario
+}
+```
+
+### Hooks para vRP / vRPex
+```lua
+Config.FrameworkHooks = {
+    vrp = {
+        clientIsPlayerLoaded = nil,
+        clientGetNeeds = nil,
+        clientHasItem = nil,
+        serverHasItem = nil,
+        serverGetNeeds = nil,
+    },
 }
 ```
 
@@ -233,8 +246,8 @@ hx-hud/
 | Resource | Required |
 |---|---|
 | [ox_lib](https://github.com/overextended/ox_lib) | ✅ Yes |
-| [qbx_core](https://github.com/Qbox-project/qbx_core) or [qb-core](https://github.com/qbcore-framework/qb-core) | ✅ Yes, one of them |
-| [ox_inventory](https://github.com/overextended/ox_inventory), [qb-inventory](https://github.com/qbcore-framework/qb-inventory) or [origen_inventory](https://docs.origennetwork.com/scripts/origen_inventory) | ✅ Yes, one of them for the minimap |
+| Compatible framework: `qbx_core`, `qb-core`, `es_extended`, `mythic-base`, `ND_Core`, `ox_core`, `vrp` | ✅ Yes, one of them |
+| Compatible inventory: `ox_inventory`, `qs-inventory`, `qb-inventory`, `ps-inventory`, `codem-inventory`, `core_inventory`, `ak47_inventory`, `esx_inventory`, `esx_inventoryhud`, `origen_inventory`, `mythic-inventory`, `ND_Core`, `vrp`, `custom` | ✅ Yes, one of them for the minimap |
 
 ---
 
@@ -252,7 +265,7 @@ hx-hud/
 
 ```lua
 Config.Language = 'en'   -- Menu language: 'es' | 'en' | 'ru' | 'fr' | 'cn' | 'jp'
-Config.Framework = 'auto'   -- 'auto' | 'qbx' | 'qbcore'
+Config.Framework = 'auto'   -- 'auto' | 'qbx' | 'qbcore' | 'esx' | 'mythic' | 'nd' | 'ox' | 'vrp' | 'vrpex'
 ```
 
 ### Stats
@@ -280,8 +293,21 @@ Config.Blinker = {
 ```lua
 Config.Minimap = {
     item          = 'phone',   -- Item required to see the minimap on foot
-    inventory     = 'auto',    -- 'auto' | 'ox_inventory' | 'qb-inventory' | 'origen_inventory'
+    inventory     = 'auto',    -- legacy fallback if Config.Inventory remains auto
     checkInterval = 2000,      -- ms between inventory checks
+}
+```
+
+### vRP / vRPex hooks
+```lua
+Config.FrameworkHooks = {
+    vrp = {
+        clientIsPlayerLoaded = nil,
+        clientGetNeeds = nil,
+        clientHasItem = nil,
+        serverHasItem = nil,
+        serverGetNeeds = nil,
+    },
 }
 ```
 

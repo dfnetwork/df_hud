@@ -7,12 +7,15 @@ function t(key, fallback = '') {
 
 const statKeys = ['health', 'armour', 'hunger', 'thirst', 'stamina'];
 const STAT_IDS = [...statKeys];
-const allPanels = ['hud-boxes', 'hud-bars', 'hud-origen', 'hud-samy', 'hud-circles', 'hud-stars', 'hud-diamonds', 'hud-hex', 'hud-vbar', 'hud-numbered', 'hud-pills', 'hud-icons', 'hud-3d'];
-const allSpeedos = ['speedo-minimal', 'speedo-card', 'speedo-dash', 'speedo-gauge', 'speedo-arc', 'speedo-cyber', 'speedo-bars', 'speedo-corner', 'speedo-halo', 'speedo-neon', 'speedo-samy', 'speedo-race'];
-const allVoiceStyles = ['voice-samy', 'voice-origen'];
+const allPanels = ['hud-boxes', 'hud-bars', 'hud-original', 'hud-simple', 'hud-circles', 'hud-stars', 'hud-diamonds', 'hud-hex', 'hud-vbar', 'hud-numbered', 'hud-pills', 'hud-icons', 'hud-3d'];
+const allSpeedos = ['speedo-minimal', 'speedo-card', 'speedo-dash', 'speedo-gauge', 'speedo-arc', 'speedo-cyber', 'speedo-bars', 'speedo-corner', 'speedo-halo', 'speedo-neon', 'speedo-simple', 'speedo-original', 'speedo-race'];
+const allVoiceStyles = ['voice-simple', 'voice-original'];
 const vehicleSpeedos = ['speedo-bike', 'speedo-boat', 'speedo-air'];
 const allExtSpeedos = [...allSpeedos, ...vehicleSpeedos];
 const horizontalHudStyles = new Set(allPanels);
+const LEGACY_HUD_STYLES = { 'hud-origen': 'hud-original', 'hud-samy': 'hud-simple' };
+const LEGACY_SPEEDO_STYLES = { 'speedo-samy': 'speedo-simple', 'speedo-origen': 'speedo-original' };
+const LEGACY_VOICE_STYLES = { 'voice-samy': 'voice-simple', 'voice-origen': 'voice-original' };
 
 let MAX_SPEED = 200;
 const GAUGE_ARC = 353.43;
@@ -20,7 +23,7 @@ const ARC_ARC = 228.9;
 const NEON_CIRC = 452.39;
 
 let currentSpeedoStyle = 'speedo-minimal';
-let currentVoiceStyle = 'voice-samy';
+let currentVoiceStyle = 'voice-simple';
 let inVehicle = false;
 let hudVisible = false;
 let minimapVisible = false;
@@ -84,7 +87,7 @@ const DEFAULT_CFG = {
     manualGearsEnabled: false,
     showCompass: true,
     showCompassStreet: true,
-    voiceStyle: 'voice-samy',
+    voiceStyle: 'voice-simple',
 };
 
 let cfg = { ...DEFAULT_CFG };
@@ -95,6 +98,7 @@ const menuContent = document.getElementById('hud-menu-content');
 const menuSidebar = document.getElementById('hud-menu-sidebar');
 const hudRoot = document.getElementById('hud');
 const voiceHud = document.getElementById('voice-hud');
+const speedoEl = document.getElementById('speedo');
 const saveStyleBtn = document.getElementById('save-style-btn');
 const saveSpeedoBtn = document.getElementById('save-speedo-btn');
 const saveVoiceBtn = document.getElementById('save-voice-btn');
@@ -110,6 +114,21 @@ let pendingVoiceStyle = cfg.voiceStyle;
 const buckleSound = new Audio('carbuckle.wav');
 const unbuckleSound = new Audio('carunbuckle.wav');
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function normalizeHudStyle(style) {
+    const normalized = LEGACY_HUD_STYLES[style] || style;
+    return allPanels.includes(normalized) ? normalized : 'hud-boxes';
+}
+
+function normalizeSpeedoStyle(style) {
+    const normalized = LEGACY_SPEEDO_STYLES[style] || style;
+    return allSpeedos.includes(normalized) ? normalized : 'speedo-minimal';
+}
+
+function normalizeVoiceStyle(style) {
+    const normalized = LEGACY_VOICE_STYLES[style] || style;
+    return allVoiceStyles.includes(normalized) ? normalized : DEFAULT_CFG.voiceStyle;
+}
 
 function headingToDir(h) {
     const dirs = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];

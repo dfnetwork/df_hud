@@ -3,6 +3,7 @@ loadSavedSizes();
 loadSavedPositions();
 loadSpeedoPos();
 savedVoiceStyle = cfg.voiceStyle || DEFAULT_CFG.voiceStyle;
+savedVoiceStyle = normalizeVoiceStyle(savedVoiceStyle);
 pendingVoiceStyle = savedVoiceStyle;
 currentVoiceStyle = savedVoiceStyle;
 syncCfgUI();
@@ -31,6 +32,8 @@ window.addEventListener('message', (event) => {
         } else {
             cfg = { ...DEFAULT_CFG, ...(data.config || {}) };
         }
+
+        cfg.voiceStyle = normalizeVoiceStyle(cfg.voiceStyle || DEFAULT_CFG.voiceStyle);
 
         if (data.manualGears) {
             manualGearsAvailable = !!data.manualGears.enabled;
@@ -126,11 +129,11 @@ window.addEventListener('message', (event) => {
     }
 
     if (data.type === 'setStyle') {
-        commitHudStyle(data.style);
+        commitHudStyle(normalizeHudStyle(data.style));
     }
 
     if (data.type === 'setSpeedoStyle') {
-        commitSpeedoStyle(data.style);
+        commitSpeedoStyle(normalizeSpeedoStyle(data.style));
     }
 
     if (data.type === 'stats') {

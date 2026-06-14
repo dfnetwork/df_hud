@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
 
@@ -383,9 +384,9 @@ html, body {
 
 .stat-item[data-style="hud-bars"].active { min-width: 160px; }
 
-.stat-item[data-style="hud-origen"].active { min-width: 76px; }
+.stat-item[data-style="hud-original"].active { min-width: 76px; }
 
-.stat-item[data-style="hud-samy"].active { min-width: 54px; }
+.stat-item[data-style="hud-simple"].active { min-width: 54px; }
 
 .stat-item[data-style="hud-vbar"].active {
     display: block;
@@ -670,34 +671,35 @@ html, body {
 
 .voice-origen-shell {
     position: fixed;
-    right: 32px;
-    bottom: 24px;
+    right: 24px;
+    bottom: 10px;
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    min-width: 112px;
-    padding: 8px 10px;
-    border-radius: 8px;
-    background: rgba(0,0,0,0.74);
-    box-shadow: 0 10px 24px rgba(0,0,0,0.30);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    align-items: flex-end;
+    gap: 4px;
+    min-width: 0;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    opacity: 0.76;
 }
 
 .voice-origen-shell.talking {
     transform: translateY(-1px);
-    box-shadow: 0 12px 28px rgba(232,185,14,0.18);
+    opacity: 1;
 }
 
 .voice-origen-row {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .voice-origen-icon {
-    width: 18px;
-    height: 18px;
-    color: rgba(255,255,255,0.28);
+    width: 16px;
+    height: 16px;
+    color: rgba(255,255,255,0.24);
 }
 
 .voice-origen-icon svg {
@@ -707,6 +709,7 @@ html, body {
 
 .voice-origen-icon.active {
     color: rgba(232,185,14,0.92);
+    filter: drop-shadow(0 0 4px rgba(232,185,14,0.62));
 }
 
 .voice-origen-steps {
@@ -717,7 +720,7 @@ html, body {
 
 .voice-origen-step {
     display: block;
-    width: 10px;
+    width: 8px;
     border-radius: 999px;
     background: rgba(255,255,255,0.14);
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
@@ -742,15 +745,17 @@ html, body {
 }
 
 .voice-origen-label {
-    font-size: 15px;
-    color: rgba(255,255,255,0.95);
+    font-size: 13px;
+    color: rgba(255,255,255,0.86);
     text-transform: uppercase;
+    text-shadow: 0 0 8px rgba(0,0,0,0.78);
 }
 
 .voice-origen-channel {
-    font-size: 12px;
+    font-size: 11px;
     color: rgba(232,185,14,0.92);
     text-transform: uppercase;
+    text-shadow: 0 0 8px rgba(0,0,0,0.78);
 }
 
 @keyframes oxy-warn {
@@ -1153,16 +1158,16 @@ html, body {
 #neon-indicators .si-icon  svg { width: 12px; height: 12px; }
 #neon-indicators .si-blink.active { animation: blink-anim 0.65s ease infinite; }
 
-#speedo-samy {
+#speedo-simple {
     align-items: flex-end;
     justify-content: flex-end;
     gap: 8px;
     background: none;
     min-width: 170px;
 }
-#speedo-samy .samy-speed-main { display: flex; align-items: flex-end; gap: 10px; }
-#speedo-samy .samy-speed-copy { display: flex; flex-direction: column; align-items: flex-end; line-height: 1; }
-#speedo-samy .speedo-unit {
+#speedo-simple .samy-speed-main { display: flex; align-items: flex-end; gap: 10px; }
+#speedo-simple .samy-speed-copy { display: flex; flex-direction: column; align-items: flex-end; line-height: 1; }
+#speedo-simple .speedo-unit {
     font-size: 11px;
     font-weight: 700;
     color: rgba(255,255,255,0.72);
@@ -1172,7 +1177,7 @@ html, body {
     margin-bottom: -2px;
     text-shadow: 0.18vmin 0.18vmin 0 rgba(0,0,0,0.3);
 }
-#speedo-samy .speedo-num {
+#speedo-simple .speedo-num {
     font-size: 72px;
     font-weight: 900;
     color: rgba(255,255,255,0.96);
@@ -1180,22 +1185,88 @@ html, body {
     text-shadow: 3px 3px 0 rgba(0,0,0,0.3);
     letter-spacing: -3px;
 }
-#speedo-samy .samy-side-stack {
+#speedo-simple .samy-side-stack {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 8px;
     margin-bottom: 8px;
 }
-#speedo-samy .si-icon svg { width: 15px; height: 15px; }
-#speedo-samy .samy-fuel-track {
+#speedo-simple .si-icon svg { width: 15px; height: 15px; }
+#speedo-simple .samy-fuel-track {
     position: relative;
     border: 2px solid rgba(255,255,255,0.4);
     background: rgba(0,0,0,0.2);
     box-shadow: 0 0 10px rgba(0,0,0,0.18);
 }
-#speedo-samy .samy-fuel-icon {
+#speedo-simple .samy-fuel-icon {
     color: rgba(255,255,255,0.8);
+}
+
+#speedo-original {
+    align-items: center;
+    justify-content: center;
+    background: none;
+    min-width: 220px;
+    font-family: 'Bebas Neue', sans-serif;
+}
+
+.speedo-original-center {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 8px;
+    min-width: 220px;
+}
+
+.speedo-original-copy {
+    display: inline-flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 5px;
+    line-height: 1;
+}
+
+#speedo-original .speedo-num {
+    font-size: 74px;
+    color: rgba(255,255,255,0.98);
+    text-shadow: 0 0 14px rgba(0,0,0,0.95);
+    letter-spacing: -2px;
+}
+
+#speedo-original .speedo-unit {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.82);
+    text-shadow: 0 0 8px rgba(0,0,0,0.9);
+    text-transform: lowercase;
+}
+
+.speedo-original-fuel {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 12px;
+    padding: 2px 7px;
+    border-radius: 7px;
+    background: rgba(255,255,255,0.82);
+    color: rgba(0,0,0,0.95);
+    box-shadow: 0 0 10px rgba(0,0,0,0.28);
+}
+
+.speedo-original-fuel svg {
+    width: 12px;
+    height: 12px;
+}
+
+#so-fuel-text {
+    font-size: 14px;
+    line-height: 1;
+}
+
+#so-fuel-text.warn {
+    color: #b42318;
 }
 
 #speedo-race {

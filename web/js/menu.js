@@ -21,8 +21,8 @@ function applyLocale(locale, translations = {}) {
 
     set('#voice-style-title', t('voice-title', 'Voice HUD'));
     set('#voice-style-desc', t('voice-desc', 'Change the voice indicator style.'));
-    set('#voice-label-samy', t('voice-style-samy', 'Samy'));
-    set('#voice-label-origen', t('voice-style-origen', 'Origen'));
+    set('#voice-label-simple', t('voice-style-simple', 'Simple'));
+    set('#voice-label-original', t('voice-style-original', 'Original'));
 
     document.getElementById('hud-menu-close').textContent = t('btn-close', '✕ Close');
     saveStyleBtn.textContent = t('btn-save-style', 'Save style');
@@ -125,50 +125,56 @@ function syncVoiceCardState() {
 }
 
 function setStyle(id) {
-    pendingHudStyle = id;
-    hudRoot.dataset.style = id;
-    hudRoot.dataset.layout = horizontalHudStyles.has(id) ? 'horizontal' : 'compact';
+    const normalized = normalizeHudStyle(id);
+    pendingHudStyle = normalized;
+    hudRoot.dataset.style = normalized;
+    hudRoot.dataset.layout = horizontalHudStyles.has(normalized) ? 'horizontal' : 'compact';
     document.querySelectorAll('.stat-item').forEach((el) => {
-        el.classList.toggle('active', el.dataset.style === id);
+        el.classList.toggle('active', el.dataset.style === normalized);
     });
     queueHudStatsLayout();
     syncHudCardState();
 }
 
 function setSpeedoStyle(id) {
-    pendingSpeedoStyle = id;
-    currentSpeedoStyle = id;
-    setActiveSpeedoPanel(id);
+    const normalized = normalizeSpeedoStyle(id);
+    pendingSpeedoStyle = normalized;
+    currentSpeedoStyle = normalized;
+    setActiveSpeedoPanel(normalized);
     syncSpeedoCardState();
 }
 
 function setVoiceStyle(id) {
-    pendingVoiceStyle = id;
-    currentVoiceStyle = id;
-    if (voiceHud) voiceHud.dataset.style = id;
+    const normalized = normalizeVoiceStyle(id);
+    pendingVoiceStyle = normalized;
+    currentVoiceStyle = normalized;
+    if (voiceHud) voiceHud.dataset.style = normalized;
     document.querySelectorAll('.voice-style').forEach((el) => {
-        el.classList.toggle('active', el.dataset.voiceStyle === id);
+        el.classList.toggle('active', el.dataset.voiceStyle === normalized);
     });
     syncVoiceCardState();
 }
 
 function commitHudStyle(id) {
-    savedHudStyle = id;
-    pendingHudStyle = id;
-    setStyle(id);
+    const normalized = normalizeHudStyle(id);
+    savedHudStyle = normalized;
+    pendingHudStyle = normalized;
+    setStyle(normalized);
 }
 
 function commitSpeedoStyle(id) {
-    savedSpeedoStyle = id;
-    pendingSpeedoStyle = id;
-    setSpeedoStyle(id);
+    const normalized = normalizeSpeedoStyle(id);
+    savedSpeedoStyle = normalized;
+    pendingSpeedoStyle = normalized;
+    setSpeedoStyle(normalized);
 }
 
 function commitVoiceStyle(id) {
-    savedVoiceStyle = id;
-    pendingVoiceStyle = id;
-    cfg.voiceStyle = id;
-    setVoiceStyle(id);
+    const normalized = normalizeVoiceStyle(id);
+    savedVoiceStyle = normalized;
+    pendingVoiceStyle = normalized;
+    cfg.voiceStyle = normalized;
+    setVoiceStyle(normalized);
 }
 
 function closeMenu() {
@@ -236,7 +242,7 @@ saveSpeedoBtn.addEventListener('click', () => {
 
 saveVoiceBtn.addEventListener('click', () => {
     if (pendingVoiceStyle === savedVoiceStyle) return;
-    cfg.voiceStyle = pendingVoiceStyle;
+    cfg.voiceStyle = normalizeVoiceStyle(pendingVoiceStyle);
     saveCfg();
     commitVoiceStyle(pendingVoiceStyle);
 });

@@ -139,8 +139,14 @@ function updateFuel(value) {
     const fuelIcon = document.getElementById('sc-fuel-icon');
     if (fuelIcon) fuelIcon.classList.toggle('warn', value <= 15);
 
-    const samyFuelIcon = document.getElementById('ss-fuel-icon');
-    if (samyFuelIcon) samyFuelIcon.classList.toggle('warn', value <= 15);
+    const simpleFuelIcon = document.getElementById('ss-fuel-icon');
+    if (simpleFuelIcon) simpleFuelIcon.classList.toggle('warn', value <= 15);
+
+    const originalFuelText = document.getElementById('so-fuel-text');
+    if (originalFuelText) {
+        originalFuelText.textContent = `${Math.round(value)}`;
+        originalFuelText.classList.toggle('warn', value <= 15);
+    }
 
     const raceFuelText = document.getElementById('sr-fuel-text');
     if (raceFuelText) raceFuelText.textContent = `${Math.round(value)}%`;
@@ -238,12 +244,12 @@ function updateVoiceHud(data) {
     const radioActive = !!data.radioActive;
     const radioChannel = Number(data.radioChannel ?? 0);
 
-    const samyBar = document.getElementById('voice-samy-bar');
-    if (samyBar) {
+    const simpleBar = document.getElementById('voice-samy-bar');
+    if (simpleBar) {
         const width = range <= 1.6 ? 24 : range <= 3.5 ? 48 : 72;
-        samyBar.style.width = `${width}px`;
-        samyBar.classList.toggle('talking', talking);
-        samyBar.classList.toggle('silent', !talking);
+        simpleBar.style.width = `${width}px`;
+        simpleBar.classList.toggle('talking', talking);
+        simpleBar.classList.toggle('silent', !talking);
     }
 
     const origenShell = document.querySelector('.voice-origen-shell');

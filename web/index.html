@@ -47,13 +47,13 @@
                         <div class="card-preview card-preview-col"><div class="prev-bar" style="background:rgba(255,75,87,0.7);width:90%"></div><div class="prev-bar" style="background:rgba(9,132,227,0.7);width:40%"></div><div class="prev-bar" style="background:rgba(253,203,110,0.7);width:75%"></div><div class="prev-bar" style="background:rgba(0,206,201,0.7);width:60%"></div><div class="prev-bar" style="background:rgba(108,92,231,0.7);width:85%"></div></div>
                         <span class="card-label">Barras</span>
                     </div>
-                    <div class="menu-card" data-style="hud-origen">
+                    <div class="menu-card" data-style="hud-original">
                         <div class="card-preview card-preview-col card-preview-origen"><div class="prev-origen" style="--preview-color:rgba(255,75,87,0.85);width:92%"></div><div class="prev-origen" style="--preview-color:rgba(9,132,227,0.85);width:54%"></div><div class="prev-origen" style="--preview-color:rgba(253,203,110,0.85);width:78%"></div><div class="prev-origen" style="--preview-color:rgba(0,206,201,0.85);width:66%"></div><div class="prev-origen" style="--preview-color:rgba(108,92,231,0.85);width:88%"></div></div>
-                        <span class="card-label">Origen</span>
+                        <span class="card-label">Original</span>
                     </div>
-                    <div class="menu-card" data-style="hud-samy">
+                    <div class="menu-card" data-style="hud-simple">
                         <div class="card-preview card-preview-col card-preview-samy"><div class="prev-samy" style="--preview-color:rgba(255,75,87,0.85);width:100%"></div><div class="prev-samy" style="--preview-color:rgba(9,132,227,0.85);width:76%"></div><div class="prev-samy" style="--preview-color:rgba(253,203,110,0.85);width:84%"></div><div class="prev-samy" style="--preview-color:rgba(0,206,201,0.85);width:80%"></div><div class="prev-samy" style="--preview-color:rgba(108,92,231,0.85);width:70%"></div></div>
-                        <span class="card-label">Samy</span>
+                        <span class="card-label">Simple</span>
                     </div>
                     <div class="menu-card" data-style="hud-circles">
                         <div class="card-preview"><div class="prev-box prev-circle" style="background:rgba(255,75,87,0.7)"></div><div class="prev-box prev-circle" style="background:rgba(9,132,227,0.7)"></div><div class="prev-box prev-circle" style="background:rgba(253,203,110,0.7)"></div><div class="prev-box prev-circle" style="background:rgba(0,206,201,0.7)"></div><div class="prev-box prev-circle" style="background:rgba(108,92,231,0.7)"></div></div>
@@ -100,19 +100,19 @@
                     <h3 class="voice-style-title" id="voice-style-title">Voice HUD</h3>
                     <p class="voice-style-desc" id="voice-style-desc">Cambia el estilo del indicador de voz.</p>
                     <div id="voice-menu-grid">
-                        <div class="menu-card voice-card-select" data-voice-style="voice-samy">
+                        <div class="menu-card voice-card-select" data-voice-style="voice-simple">
                             <div class="card-preview voice-preview voice-preview-samy">
                                 <div class="voice-prev-samy"></div>
                             </div>
-                            <span class="card-label" id="voice-label-samy">Samy</span>
+                            <span class="card-label" id="voice-label-simple">Simple</span>
                         </div>
-                        <div class="menu-card voice-card-select" data-voice-style="voice-origen">
+                        <div class="menu-card voice-card-select" data-voice-style="voice-original">
                             <div class="card-preview voice-preview voice-preview-origen">
                                 <div class="voice-prev-origen">
                                     <span></span><span></span><span></span><span class="radio"></span>
                                 </div>
                             </div>
-                            <span class="card-label" id="voice-label-origen">Origen</span>
+                            <span class="card-label" id="voice-label-original">Original</span>
                         </div>
                     </div>
                     <div class="menu-actions">
@@ -254,7 +254,7 @@
                         <span class="card-label">Neón</span>
                     </div>
 
-                    <div class="menu-card speedo-card-select" data-speedo="speedo-samy">
+                    <div class="menu-card speedo-card-select" data-speedo="speedo-simple">
                         <div class="card-preview" style="height:auto;padding:2px 0;">
                             <div style="display:flex;align-items:flex-end;gap:4px;">
                                 <div style="font-size:15px;font-weight:900;color:#fff;transform:skewX(-10deg);line-height:1;">80</div>
@@ -266,7 +266,21 @@
                                 </div>
                             </div>
                         </div>
-                        <span class="card-label">Samy</span>
+                        <span class="card-label">Simple</span>
+                    </div>
+
+                    <div class="menu-card speedo-card-select" data-speedo="speedo-original">
+                        <div class="card-preview" style="height:auto;padding:2px 0;">
+                            <div style="display:flex;align-items:flex-end;gap:5px;">
+                                <div style="display:flex;align-items:center;gap:2px;background:rgba(255,255,255,0.82);color:#000;border-radius:5px;padding:2px 4px;">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:7px;height:7px;"><path d="M3 22V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/><path d="M3 11h12"/><path d="M17 7h1a2 2 0 0 1 2 2v5a1 1 0 0 0 2 0V9l-2-2"/></svg>
+                                    <span style="font-size:6px;font-weight:700;">100</span>
+                                </div>
+                                <div style="font-size:16px;font-weight:700;color:#fff;line-height:1;text-shadow:0 0 8px rgba(0,0,0,0.85);">80</div>
+                                <div style="font-size:5px;color:rgba(255,255,255,0.78);margin-bottom:1px;">km/h</div>
+                            </div>
+                        </div>
+                        <span class="card-label">Original</span>
                     </div>
 
                     <div class="menu-card speedo-card-select" data-speedo="speedo-race">
@@ -464,14 +478,14 @@
     <span class="oxy-unit">%</span>
 </div>
 
-<div id="voice-hud" data-style="voice-samy">
-    <div class="voice-style active" data-voice-style="voice-samy">
+<div id="voice-hud" data-style="voice-simple">
+    <div class="voice-style active" data-voice-style="voice-simple">
         <div class="voice-samy-shell">
             <div id="voice-samy-bar" class="voice-samy-bar silent"></div>
         </div>
     </div>
 
-    <div class="voice-style" data-voice-style="voice-origen">
+    <div class="voice-style" data-voice-style="voice-original">
         <div class="voice-origen-shell">
             <div class="voice-origen-row">
                 <div class="voice-origen-icon" id="voice-origen-radio">
@@ -500,8 +514,8 @@
     <div id="stat-health" class="stat-container" data-stat="health" data-draggable="stat">
         <div class="stat-item active" data-style="hud-boxes"><div class="stat-box glass"><div class="box-fill" data-stat="health"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div></div>
         <div class="stat-item" data-style="hud-bars"><div class="stat-row"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><div class="bar-track"><div class="bar" id="health-bar"></div></div></div></div>
-        <div class="stat-item" data-style="hud-origen"><div class="origen-stat"><div class="origen-icon-wrap"><svg class="origen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div class="origen-track"><div class="origen-fill" data-stat="health"></div></div></div></div>
-        <div class="stat-item" data-style="hud-samy"><div class="samy-stat"><div class="samy-icon-wrap"><svg class="samy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div class="samy-track"><div class="samy-fill" data-stat="health"></div></div></div></div>
+        <div class="stat-item" data-style="hud-original"><div class="origen-stat"><div class="origen-icon-wrap"><svg class="origen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div class="origen-track"><div class="origen-fill" data-stat="health"></div></div></div></div>
+        <div class="stat-item" data-style="hud-simple"><div class="samy-stat"><div class="samy-icon-wrap"><svg class="samy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><div class="samy-track"><div class="samy-fill" data-stat="health"></div></div></div></div>
         <div class="stat-item" data-style="hud-circles"><div class="stat-box circle"><div class="box-fill" data-stat="health"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div></div>
         <div class="stat-item" data-style="hud-stars"><div class="stat-box star"><div class="box-fill" data-stat="health"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div></div>
         <div class="stat-item" data-style="hud-diamonds"><div class="stat-box diamond"><div class="box-fill" data-stat="health"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div></div>
@@ -516,8 +530,8 @@
     <div id="stat-armour" class="stat-container" data-stat="armour" data-draggable="stat">
         <div class="stat-item active" data-style="hud-boxes"><div class="stat-box glass"><div class="box-fill" data-stat="armour"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div></div>
         <div class="stat-item" data-style="hud-bars"><div class="stat-row"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><div class="bar-track"><div class="bar" id="armour-bar"></div></div></div></div>
-        <div class="stat-item" data-style="hud-origen"><div class="origen-stat"><div class="origen-icon-wrap"><svg class="origen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="origen-track"><div class="origen-fill" data-stat="armour"></div></div></div></div>
-        <div class="stat-item" data-style="hud-samy"><div class="samy-stat"><div class="samy-icon-wrap"><svg class="samy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="samy-track"><div class="samy-fill" data-stat="armour"></div></div></div></div>
+        <div class="stat-item" data-style="hud-original"><div class="origen-stat"><div class="origen-icon-wrap"><svg class="origen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="origen-track"><div class="origen-fill" data-stat="armour"></div></div></div></div>
+        <div class="stat-item" data-style="hud-simple"><div class="samy-stat"><div class="samy-icon-wrap"><svg class="samy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="samy-track"><div class="samy-fill" data-stat="armour"></div></div></div></div>
         <div class="stat-item" data-style="hud-circles"><div class="stat-box circle"><div class="box-fill" data-stat="armour"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div></div>
         <div class="stat-item" data-style="hud-stars"><div class="stat-box star"><div class="box-fill" data-stat="armour"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div></div>
         <div class="stat-item" data-style="hud-diamonds"><div class="stat-box diamond"><div class="box-fill" data-stat="armour"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div></div>
@@ -532,8 +546,8 @@
     <div id="stat-hunger" class="stat-container" data-stat="hunger" data-draggable="stat">
         <div class="stat-item active" data-style="hud-boxes"><div class="stat-box glass"><div class="box-fill" data-stat="hunger"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div></div>
         <div class="stat-item" data-style="hud-bars"><div class="stat-row"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg><div class="bar-track"><div class="bar" id="hunger-bar"></div></div></div></div>
-        <div class="stat-item" data-style="hud-origen"><div class="origen-stat"><div class="origen-icon-wrap"><svg class="origen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div><div class="origen-track"><div class="origen-fill" data-stat="hunger"></div></div></div></div>
-        <div class="stat-item" data-style="hud-samy"><div class="samy-stat"><div class="samy-icon-wrap"><svg class="samy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div><div class="samy-track"><div class="samy-fill" data-stat="hunger"></div></div></div></div>
+        <div class="stat-item" data-style="hud-original"><div class="origen-stat"><div class="origen-icon-wrap"><svg class="origen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div><div class="origen-track"><div class="origen-fill" data-stat="hunger"></div></div></div></div>
+        <div class="stat-item" data-style="hud-simple"><div class="samy-stat"><div class="samy-icon-wrap"><svg class="samy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div><div class="samy-track"><div class="samy-fill" data-stat="hunger"></div></div></div></div>
         <div class="stat-item" data-style="hud-circles"><div class="stat-box circle"><div class="box-fill" data-stat="hunger"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div></div>
         <div class="stat-item" data-style="hud-stars"><div class="stat-box star"><div class="box-fill" data-stat="hunger"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div></div>
         <div class="stat-item" data-style="hud-diamonds"><div class="stat-box diamond"><div class="box-fill" data-stat="hunger"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div></div>
@@ -548,8 +562,8 @@
     <div id="stat-thirst" class="stat-container" data-stat="thirst" data-draggable="stat">
         <div class="stat-item active" data-style="hud-boxes"><div class="stat-box glass"><div class="box-fill" data-stat="thirst"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div></div>
         <div class="stat-item" data-style="hud-bars"><div class="stat-row"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg><div class="bar-track"><div class="bar" id="thirst-bar"></div></div></div></div>
-        <div class="stat-item" data-style="hud-origen"><div class="origen-stat"><div class="origen-icon-wrap"><svg class="origen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div><div class="origen-track"><div class="origen-fill" data-stat="thirst"></div></div></div></div>
-        <div class="stat-item" data-style="hud-samy"><div class="samy-stat"><div class="samy-icon-wrap"><svg class="samy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div><div class="samy-track"><div class="samy-fill" data-stat="thirst"></div></div></div></div>
+        <div class="stat-item" data-style="hud-original"><div class="origen-stat"><div class="origen-icon-wrap"><svg class="origen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div><div class="origen-track"><div class="origen-fill" data-stat="thirst"></div></div></div></div>
+        <div class="stat-item" data-style="hud-simple"><div class="samy-stat"><div class="samy-icon-wrap"><svg class="samy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div><div class="samy-track"><div class="samy-fill" data-stat="thirst"></div></div></div></div>
         <div class="stat-item" data-style="hud-circles"><div class="stat-box circle"><div class="box-fill" data-stat="thirst"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div></div>
         <div class="stat-item" data-style="hud-stars"><div class="stat-box star"><div class="box-fill" data-stat="thirst"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div></div>
         <div class="stat-item" data-style="hud-diamonds"><div class="stat-box diamond"><div class="box-fill" data-stat="thirst"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div></div>
@@ -564,8 +578,8 @@
     <div id="stat-stamina" class="stat-container" data-stat="stamina" data-draggable="stat">
         <div class="stat-item active" data-style="hud-boxes"><div class="stat-box glass"><div class="box-fill" data-stat="stamina"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div></div>
         <div class="stat-item" data-style="hud-bars"><div class="stat-row"><svg class="stat-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg><div class="bar-track"><div class="bar" id="stamina-bar"></div></div></div></div>
-        <div class="stat-item" data-style="hud-origen"><div class="origen-stat"><div class="origen-icon-wrap"><svg class="origen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="origen-track"><div class="origen-fill" data-stat="stamina"></div></div></div></div>
-        <div class="stat-item" data-style="hud-samy"><div class="samy-stat"><div class="samy-icon-wrap"><svg class="samy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="samy-track"><div class="samy-fill" data-stat="stamina"></div></div></div></div>
+        <div class="stat-item" data-style="hud-original"><div class="origen-stat"><div class="origen-icon-wrap"><svg class="origen-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="origen-track"><div class="origen-fill" data-stat="stamina"></div></div></div></div>
+        <div class="stat-item" data-style="hud-simple"><div class="samy-stat"><div class="samy-icon-wrap"><svg class="samy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><div class="samy-track"><div class="samy-fill" data-stat="stamina"></div></div></div></div>
         <div class="stat-item" data-style="hud-circles"><div class="stat-box circle"><div class="box-fill" data-stat="stamina"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div></div>
         <div class="stat-item" data-style="hud-stars"><div class="stat-box star"><div class="box-fill" data-stat="stamina"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div></div>
         <div class="stat-item" data-style="hud-diamonds"><div class="stat-box diamond"><div class="box-fill" data-stat="stamina"></div><svg class="box-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div></div>
@@ -847,7 +861,7 @@
         </div>
     </div>
 
-    <div id="speedo-samy" class="speedo-panel">
+    <div id="speedo-simple" class="speedo-panel">
         <div class="samy-speed-main">
             <div class="samy-speed-copy">
                 <span class="speedo-unit">km/h</span>
@@ -859,6 +873,19 @@
                     <div class="fuel-fill-vert" id="ss-fuel-fill"></div>
                 </div>
                 <div class="si-icon samy-fuel-icon" id="ss-fuel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/><path d="M3 11h12"/><path d="M17 7h1a2 2 0 0 1 2 2v5a1 1 0 0 0 2 0V9l-2-2"/></svg></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="speedo-original" class="speedo-panel">
+        <div class="speedo-original-center">
+            <div class="speedo-original-fuel" id="so-fuel-pill">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 22V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/><path d="M3 11h12"/><path d="M17 7h1a2 2 0 0 1 2 2v5a1 1 0 0 0 2 0V9l-2-2"/></svg>
+                <span id="so-fuel-text">100</span>
+            </div>
+            <div class="speedo-original-copy">
+                <span class="speedo-num">0</span>
+                <span class="speedo-unit">km/h</span>
             </div>
         </div>
     </div>

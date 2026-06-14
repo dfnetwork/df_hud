@@ -1,11 +1,19 @@
 function loadCfg() {
     try {
         const saved = JSON.parse(localStorage.getItem('df_hud-cfg') || 'null');
-        if (saved) cfg = { ...DEFAULT_CFG, ...saved };
+        if (saved) {
+            if (saved.voiceStyle) {
+                saved.voiceStyle = normalizeVoiceStyle(saved.voiceStyle);
+            }
+            cfg = { ...DEFAULT_CFG, ...saved };
+        }
     } catch (error) {}
 }
 
 function saveCfg() {
+    if (cfg.voiceStyle) {
+        cfg.voiceStyle = normalizeVoiceStyle(cfg.voiceStyle);
+    }
     localStorage.setItem('df_hud-cfg', JSON.stringify(cfg));
 }
 
@@ -85,8 +93,11 @@ function applyCfg() {
     document.querySelectorAll('#speedo .fuel-track').forEach((el) => { el.style.display = cfg.showFuel ? '' : 'none'; });
     document.querySelectorAll('#speedo .fuel-copy').forEach((el) => { el.style.display = cfg.showFuel ? '' : 'none'; });
 
-    const samyFuelIcon = document.getElementById('ss-fuel-icon');
-    if (samyFuelIcon) samyFuelIcon.style.display = cfg.showFuel ? '' : 'none';
+    const simpleFuelIcon = document.getElementById('ss-fuel-icon');
+    if (simpleFuelIcon) simpleFuelIcon.style.display = cfg.showFuel ? '' : 'none';
+
+    const originalFuelWrap = document.getElementById('so-fuel-pill');
+    if (originalFuelWrap) originalFuelWrap.style.display = cfg.showFuel ? '' : 'none';
 
     const haloFuel = document.getElementById('sh-fuel');
     if (haloFuel) {

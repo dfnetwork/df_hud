@@ -1,8 +1,23 @@
-local QBCore = nil
 local framework = nil
 local inventory = nil
+local frameworkAdapter = nil
+local inventoryAdapter = nil
 local manualGearsPreferences = {}
 local MANUAL_GEARS_PREFS_FILE = 'data/manual_gears_prefs.json'
+
+local function normalizePercent(value)
+    local numeric = tonumber(value)
+    if not numeric then
+        return nil
+    end
+
+    return math.max(0, math.min(100, math.floor(numeric + 0.5)))
+end
+
+local function tr(key, fallback)
+    local locale = GetLocale(Config.Language or Config.Locale)
+    return locale[key] or fallback
+end
 
 local function loadManualGearsPreferences()
     local raw = LoadResourceFile(GetCurrentResourceName(), MANUAL_GEARS_PREFS_FILE)
@@ -53,58 +68,31 @@ local function setManualGearsPreference(source, enabled)
 end
 
 local function isResourceStarted(resourceName)
-    local state = GetResourceState(resourceName)
-    return state == 'started' or state == 'starting'
+    return DFHUD.isResourceStarted(resourceName)
 end
 
-local function resolveFramework()
-    if Config.Framework == 'qbx' and isResourceStarted('qbx_core') then
-        return 'qbx'
+local function getConfiguredInventory()
+    local preferred = Config.Inventory
+    if type(preferred) == 'string' and preferred ~= '' and preferred:lower() ~= 'auto' then
+        return preferred
     end
 
-    if Config.Framework == 'qbcore' and isResourceStarted('qb-core') then
-        return 'qbcore'
+    local legacy = Config.Minimap and Config.Minimap.inventory or nil
+    if type(legacy) == 'string' and legacy ~= '' then
+        return legacy
     end
 
-    if isResourceStarted('qbx_core') then
-        return 'qbx'
-    end
-
-    if isResourceStarted('qb-core') then
-        return 'qbcore'
-    end
-
-    return nil
-end
-
-local function resolveInventory()
-    if Config.Minimap.inventory ~= 'auto' and isResourceStarted(Config.Minimap.inventory) then
-        return Config.Minimap.inventory
-    end
-
-    local candidates = { 'ox_inventory', 'qb-inventory', 'origen_inventory' }
-
-    for _, resourceName in ipairs(candidates) do
-        if isResourceStarted(resourceName) then
-            return resourceName
-        end
-    end
-
-    return nil
+    return 'auto'
 end
 
 local function refreshRuntime()
-    framework = resolveFramework()
-    inventory = resolveInventory()
+    framework = DFHUD.detectFramework(Config.Framework)
+    inventory = DFHUD.detectInventory(getConfiguredInventory())
+    frameworkAdapter = DFHUD.getServerFrameworkAdapter(framework)
+    inventoryAdapter = DFHUD.getServerInventoryAdapter(inventory)
 
-    if isResourceStarted('qb-core') then
-        local ok, core = pcall(function()
-            return exports['qb-core']:GetCoreObject()
-        end)
-
-        if ok then
-            QBCore = core
-        end
+    if frameworkAdapter and frameworkAdapter.boot then
+        frameworkAdapter:boot()
     end
 end
 
@@ -114,43 +102,133 @@ local function hasItemServer(source, itemName)
     end
 
     refreshRuntime()
-
-    if inventory == 'ox_inventory' then
-        local ok, count = pcall(function()
-            return exports.ox_inventory:Search(source, 'count', itemName)
-        end)
-
-        return ok and (tonumber(count) or 0) > 0
-    end
-
-    if inventory == 'qb-inventory' then
-        local ok, hasItem = pcall(function()
-            return exports['qb-inventory']:HasItem(source, itemName, 1)
-        end)
-
-        if ok then
-            return hasItem == true
-        end
-
-        if QBCore and QBCore.Functions and QBCore.Functions.GetPlayer then
-            local player = QBCore.Functions.GetPlayer(source)
-            if player and player.Functions and player.Functions.GetItemByName then
-                return player.Functions.GetItemByName(itemName) ~= nil
-            end
-        end
-
+    if not inventoryAdapter or not inventoryAdapter.hasItem then
         return false
     end
 
-    if inventory == 'origen_inventory' then
-        local ok, hasItem = pcall(function()
-            return exports.origen_inventory:HasItem(source, itemName, 1)
-        end)
+    return inventoryAdapter.hasItem(source, itemName, {
+        getFrameworkAdapter = function()
+            return frameworkAdapter
+        end,
+    }) == true
+end
 
-        return ok and hasItem == true
+local function getNeedsSnapshot(source)
+    refreshRuntime()
+    if not frameworkAdapter or not frameworkAdapter.getNeeds then
+        return {}
     end
 
-    return false
+    local needs = frameworkAdapter:getNeeds(source) or {}
+    return {
+        hunger = normalizePercent(needs.hunger),
+        thirst = normalizePercent(needs.thirst),
+    }
+end
+
+local function compareVersions(localVersion, remoteVersion)
+    local function split(version)
+        local parts = {}
+        for token in tostring(version or ''):gmatch('[^.]+') do
+            parts[#parts + 1] = tonumber(token) or 0
+        end
+        return parts
+    end
+
+    local left = split(localVersion)
+    local right = split(remoteVersion)
+    local size = math.max(#left, #right)
+
+    for index = 1, size do
+        local a = left[index] or 0
+        local b = right[index] or 0
+        if a ~= b then
+            return a < b and -1 or 1
+        end
+    end
+
+    return 0
+end
+
+local function formatStartupValue(value, noneKey, noneFallback)
+    if value and value ~= '' then
+        return value
+    end
+
+    return tr(noneKey, noneFallback)
+end
+
+local function printStartupBanner(versionSummary)
+    local resourceName = GetCurrentResourceName()
+    local localVersion = GetResourceMetadata(resourceName, 'version', 0) or '0.0.0'
+    local customSupportEnabled = framework == 'custom' or inventory == 'custom'
+
+    print(tr('debug-banner-line', '========================================================'))
+    print(('[%s]'):format(resourceName))
+    print(('* %s: %s'):format(
+        tr('debug-author', 'DF Network'),
+        formatStartupValue(GetResourceMetadata(resourceName, 'author', 0), 'debug-author-missing', 'Unknown')
+    ))
+    print(('* %s: %s'):format(
+        tr('debug-framework', 'Framework'),
+        formatStartupValue(framework, 'debug-framework-none', 'No framework detected')
+    ))
+    print(('* %s: %s'):format(
+        tr('debug-inventory', 'Inventory'),
+        formatStartupValue(inventory, 'debug-inventory-none', 'No inventory resource found')
+    ))
+    print(('* %s: %s'):format(
+        tr('debug-voice', 'Voice HUD'),
+        Config.Voice.enabled and tr('debug-enabled', 'Enabled') or tr('debug-disabled', 'Disabled')
+    ))
+    print(('* %s: %s'):format(
+        tr('debug-manual-gears', 'Manual gears'),
+        Config.ManualGears.enabled and tr('debug-enabled', 'Enabled') or tr('debug-disabled', 'Disabled')
+    ))
+    print(('* %s: %s'):format(
+        tr('debug-version', 'Version'),
+        versionSummary or localVersion
+    ))
+    print(('* %s: %s'):format(
+        tr('debug-updates', 'Updates'),
+        Config.Updates.repoUrl
+    ))
+    if customSupportEnabled then
+        print(('* %s: %s'):format(
+            tr('debug-support', 'Support'),
+            tr('debug-custom-ticket', 'Custom framework/inventory detected | Open a ticket at discord.gg/dfnetwork for official support')
+        ))
+    end
+    print(tr('debug-banner-line', '========================================================'))
+end
+
+local function checkRemoteVersionAndPrint()
+    local localVersion = GetResourceMetadata(GetCurrentResourceName(), 'version', 0) or '0.0.0'
+
+    if not (Config.Debug and Config.Debug.enabled and Config.Debug.versionCheck) then
+        printStartupBanner(localVersion)
+        return
+    end
+
+    PerformHttpRequest(Config.Updates.manifestUrl, function(statusCode, body)
+        if statusCode ~= 200 or type(body) ~= 'string' then
+            printStartupBanner(('%s | %s'):format(localVersion, tr('debug-version-error', 'Version check failed')))
+            return
+        end
+
+        local remoteVersion = body:match("df_hud%s*=%s*['\"]([^'\"]+)['\"]")
+        if not remoteVersion then
+            printStartupBanner(('%s | %s'):format(localVersion, tr('debug-version-missing', 'No entry found in remote manifest')))
+            return
+        end
+
+        if compareVersions(localVersion, remoteVersion) < 0 then
+            printStartupBanner(('%s | %s: %s'):format(localVersion, tr('debug-version-update', 'Update available'), remoteVersion))
+            return
+        end
+
+        printStartupBanner(('%s | %s'):format(localVersion, tr('debug-version-latest', 'Latest version')))
+    end, 'GET', '', {}, { followLocation = true })
 end
 
 lib.callback.register('df_hud:server:hasMinimapItem', function(source, itemName)
@@ -159,6 +237,10 @@ end)
 
 lib.callback.register('df_hud:server:getManualGearsPreference', function(source)
     return getManualGearsPreference(source)
+end)
+
+lib.callback.register('df_hud:server:getNeedsSnapshot', function(source)
+    return getNeedsSnapshot(source)
 end)
 
 lib.callback.register('df_hud:server:getSupportInfo', function()
@@ -181,9 +263,5 @@ AddEventHandler('onResourceStart', function(resourceName)
 
     loadManualGearsPreferences()
     refreshRuntime()
-
-    print(('[df_hud] Server support ready. Framework: %s | Inventory: %s'):format(
-        framework or 'none',
-        inventory or 'none'
-    ))
+    checkRemoteVersionAndPrint()
 end)

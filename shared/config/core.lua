@@ -5,8 +5,8 @@ Config.Language = 'es'   -- 'es' | 'en' | 'ru' | 'fr' | 'cn' | 'jp'
 Config.Locale = Config.Language -- compatibilidad interna
 
 -- ─── Framework / Inventario ───────────────────────────────────────────────────
-Config.Framework = 'auto'   -- 'auto' | 'qbx' | 'qbcore'
-
+Config.Framework = 'auto'   -- 'auto' | 'qbx' | 'qbcore' | 'esx' | 'mythic' | 'nd' | 'ox' | 'vrp' | 'vrpex' | 'custom'
+Config.Inventory = 'auto'   -- 'auto' | 'ox_inventory' | 'qs-inventory' | 'qb-inventory' | 'ps-inventory' | 'codem-inventory' | 'core_inventory' | 'ak47_inventory' | 'esx_inventory' | 'esx_inventoryhud' | 'origen_inventory' | 'mythic-inventory' | 'ND_Core' | 'vrp' | 'custom'
 -- ─── Stats ─────────────────────────────────────────────────────────────────────
 Config.Stats = {
     updateInterval = 500,   -- ms entre cada actualización de stats
@@ -21,7 +21,7 @@ Config.Speedo = {
 Config.Voice = {
     enabled = true,
     updateInterval = 150,       -- ms entre actualizaciones del voice HUD
-    defaultStyle = 'voice-samy' -- 'voice-samy' | 'voice-origen'
+    defaultStyle = 'voice-simple' -- 'voice-simple' | 'voice-original'
 }
 
 -- ─── Intermitentes ─────────────────────────────────────────────────────────────
@@ -32,8 +32,44 @@ Config.Blinker = {
 -- ─── Minimapa ──────────────────────────────────────────────────────────────────
 Config.Minimap = {
     item          = 'map',     -- ítem requerido para ver el minimapa a pie
-    inventory     = 'auto',    -- 'auto' | 'ox_inventory' | 'qb-inventory' | 'origen_inventory'
+    inventory     = 'auto',    -- legado: usa Config.Inventory si está definido; este valor queda como fallback
     checkInterval = 2000,      -- ms entre comprobaciones del inventario
+}
+
+-- ─── Hooks para frameworks sin API homogénea ──────────────────────────────────
+-- vRP/vRPex no tienen una API pública estable entre forks como QBCore/ESX/ND/Ox.
+-- Estos hooks permiten terminar la integración sin tocar el core del recurso.
+-- Todos son opcionales.
+Config.FrameworkHooks = {
+    custom = {
+        clientIsPlayerLoaded = nil,   -- function() return boolean
+        clientGetPlayerData = nil,    -- function() return table
+        clientGetNeeds = nil,         -- function() return { hunger = number?, thirst = number? }
+        clientHasItem = nil,          -- function(itemName) return boolean
+        serverHasItem = nil,          -- function(source, itemName) return boolean
+        serverGetNeeds = nil,         -- function(source) return { hunger = number?, thirst = number? }
+    },
+    vrp = {
+        clientIsPlayerLoaded = nil,   -- function() return boolean
+        clientGetNeeds = nil,         -- function() return { hunger = number?, thirst = number? }
+        clientHasItem = nil,          -- function(itemName) return boolean
+        serverHasItem = nil,          -- function(source, itemName) return boolean
+        serverGetNeeds = nil,         -- function(source) return { hunger = number?, thirst = number? }
+    },
+    vrpex = {
+        clientIsPlayerLoaded = nil,
+        clientGetNeeds = nil,
+        clientHasItem = nil,
+        serverHasItem = nil,
+        serverGetNeeds = nil,
+    },
+}
+
+Config.InventoryHooks = {
+    custom = {
+        clientHasItem = nil,          -- function(itemName, context) return boolean
+        serverHasItem = nil,          -- function(source, itemName, context) return boolean
+    },
 }
 
 -- ─── Marchas manuales (starter) ───────────────────────────────────────────────

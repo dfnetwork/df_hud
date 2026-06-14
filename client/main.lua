@@ -6,9 +6,78 @@ local thirst  = 100
 local oxygen  = 100
 local stamina = 100
 
+local function getFrameworkHooks(targetFramework)
+    local hooks = Config.FrameworkHooks
+    if type(hooks) ~= 'table' then
+        return nil
+    end
+
+    local selected = hooks[targetFramework]
+    return type(selected) == 'table' and selected or nil
+end
+
+local function callHook(hook, ...)
+    if type(hook) ~= 'function' then
+        return nil, false
+    end
+
+    local ok, result = pcall(hook, ...)
+    if not ok then
+        return nil, false
+    end
+
+    return result, true
+end
+
+local function normalizePercent(value)
+    local numeric = tonumber(value)
+    if not numeric then
+        return nil
+    end
+
+    return math.max(0, math.min(100, math.floor(numeric + 0.5)))
+end
+
 local function isResourceStarted(resourceName)
-    local state = GetResourceState(resourceName)
-    return state == 'started' or state == 'starting'
+    return DFHUD.isResourceStarted(resourceName)
+end
+
+local function getConfiguredInventory()
+    local preferred = Config.Inventory
+    if type(preferred) == 'string' and preferred ~= '' and preferred:lower() ~= 'auto' then
+        return preferred
+    end
+
+    local legacy = Config.Minimap and Config.Minimap.inventory or nil
+    if type(legacy) == 'string' and legacy ~= '' then
+        return legacy
+    end
+
+    return 'auto'
+end
+
+local function normalizeHudStyle(style)
+    if style == 'hud-origen' then
+        return 'hud-original'
+    end
+
+    if style == 'hud-samy' then
+        return 'hud-simple'
+    end
+
+    return style
+end
+
+local function normalizeSpeedoStyle(style)
+    if style == 'speedo-samy' then
+        return 'speedo-simple'
+    end
+
+    if style == 'speedo-origen' then
+        return 'speedo-original'
+    end
+
+    return style
 end
 
 local function getConfiguredKeybind(action, fallback)
@@ -24,28 +93,9 @@ local function getConfiguredKeybind(action, fallback)
     return key
 end
 
-local function resolveFramework()
-    if Config.Framework == 'qbx' and isResourceStarted('qbx_core') then
-        return 'qbx'
-    end
-
-    if Config.Framework == 'qbcore' and isResourceStarted('qb-core') then
-        return 'qbcore'
-    end
-
-    if isResourceStarted('qbx_core') then
-        return 'qbx'
-    end
-
-    if isResourceStarted('qb-core') then
-        return 'qbcore'
-    end
-
-    return nil
-end
-
-local framework = resolveFramework()
-local QBCore = nil
+local framework = nil
+local frameworkAdapter = nil
+local frameworkEventsRegistered = false
 local playerLoaded = false
 local detectedInventory = nil
 local hudHidden = false
@@ -62,6 +112,11 @@ local playerManualGearsEnabled = Config.ManualGears.defaultEnabled == true
 
 local function getServerLocale()
     return GetLocale(Config.Language or Config.Locale)
+end
+
+local function callFrameworkHook(method, ...)
+    local hooks = getFrameworkHooks(framework)
+    return callHook(hooks and hooks[method], ...)
 end
 
 local function loadManualGearsPreference()
@@ -111,10 +166,15 @@ local function setRadarState(visible)
 end
 
 local function refreshFramework()
-    framework = resolveFramework()
+    framework = DFHUD.detectFramework(Config.Framework)
+    frameworkAdapter = DFHUD.getClientFrameworkAdapter(framework)
+
+    if frameworkAdapter and frameworkAdapter.boot then
+        frameworkAdapter:boot()
+    end
 
     if not framework then
-        print('[df_hud] No compatible framework detected. Expected qbx_core or qb-core.')
+        print('[df_hud] No compatible framework detected. Expected qbx_core, qb-core, es_extended, mythic-base, ND_Core, ox_core or vrp.')
         return
     end
 
@@ -123,67 +183,131 @@ local function refreshFramework()
     end
 end
 
-local function loadCoreObject()
-    refreshFramework()
-
-    if not isResourceStarted('qb-core') then
-        return nil
-    end
-
-    local ok, core = pcall(function()
-        return exports['qb-core']:GetCoreObject()
+local function refreshNeedsFromServer(state)
+    local ok, snapshot = pcall(function()
+        return lib.callback.await('df_hud:server:getNeedsSnapshot', false)
     end)
 
-    if ok then
-        return core
+    if not ok or type(snapshot) ~= 'table' then
+        return false
     end
 
-    return nil
+    local nextHunger = normalizePercent(snapshot.hunger)
+    local nextThirst = normalizePercent(snapshot.thirst)
+    local target = state or {}
+
+    if nextHunger ~= nil then
+        target.hunger = nextHunger
+    end
+
+    if nextThirst ~= nil then
+        target.thirst = nextThirst
+    end
+
+    if not state then
+        hunger = target.hunger or hunger
+        thirst = target.thirst or thirst
+    end
+
+    return true
 end
 
 local function getPlayerData()
-    QBCore = QBCore or loadCoreObject()
-
-    if not QBCore or not QBCore.Functions or not QBCore.Functions.GetPlayerData then
+    if not frameworkAdapter or not frameworkAdapter.getPlayerData then
         return {}
     end
 
-    local ok, playerData = pcall(function()
-        return QBCore.Functions.GetPlayerData()
-    end)
-
-    if ok and type(playerData) == 'table' then
-        return playerData
-    end
-
-    return {}
+    return frameworkAdapter:getPlayerData()
 end
 
 local function updateNeedsFromPlayerData(playerData)
-    local metadata = playerData and playerData.metadata or nil
-    if type(metadata) ~= 'table' then
+    if not frameworkAdapter or not frameworkAdapter.updateNeeds then
         return
     end
 
-    hunger = metadata.hunger or hunger
-    thirst = metadata.thirst or thirst
+    local state = {
+        hunger = hunger,
+        thirst = thirst,
+    }
+
+    frameworkAdapter:updateNeeds(playerData, state)
+
+    hunger = normalizePercent(state.hunger) or hunger
+    thirst = normalizePercent(state.thirst) or thirst
 end
 
 local function syncPlayerLoadedState()
     local playerData = getPlayerData()
-    playerLoaded = playerData.citizenid ~= nil or LocalPlayer.state.isLoggedIn == true
+    if frameworkAdapter and frameworkAdapter.isPlayerLoaded then
+        playerLoaded = frameworkAdapter:isPlayerLoaded(playerData) == true
+    else
+        playerLoaded = false
+    end
+
     updateNeedsFromPlayerData(playerData)
+end
+
+local function refreshFrameworkNeeds()
+    if not frameworkAdapter or not frameworkAdapter.refreshNeeds then
+        return
+    end
+
+    local state = {
+        hunger = hunger,
+        thirst = thirst,
+    }
+
+    frameworkAdapter:refreshNeeds(state, {
+        refreshNeedsFromServer = refreshNeedsFromServer,
+    })
+
+    hunger = normalizePercent(state.hunger) or hunger
+    thirst = normalizePercent(state.thirst) or thirst
+end
+
+local function resolveInventory()
+    detectedInventory = DFHUD.detectInventory(getConfiguredInventory())
+    return detectedInventory
+end
+
+local function hasMinimapItem()
+    if not Config.Minimap.item or Config.Minimap.item == '' then
+        return true
+    end
+
+    local inventory = resolveInventory()
+    if not inventory then
+        return false
+    end
+
+    local adapter = DFHUD.getClientInventoryAdapter(inventory)
+    if not adapter or not adapter.hasItem then
+        return false
+    end
+
+    return adapter.hasItem(Config.Minimap.item, {
+        getPlayerData = getPlayerData,
+        callFrameworkHook = callFrameworkHook,
+    }) == true
 end
 
 local function loadSavedStyles()
     local savedStyle = GetResourceKvpString('df_hud:style')
     if savedStyle and savedStyle ~= '' then
-        SendNUIMessage({ type = 'setStyle', style = savedStyle })
+        local normalized = normalizeHudStyle(savedStyle)
+        if normalized ~= savedStyle then
+            SetResourceKvp('df_hud:style', normalized)
+        end
+        SendNUIMessage({ type = 'setStyle', style = normalized })
     end
 
     local savedSpeedo = GetResourceKvpString('df_hud:speedo-style')
     if savedSpeedo and savedSpeedo ~= '' then
-        SendNUIMessage({ type = 'setSpeedoStyle', style = savedSpeedo })
+        local normalized = normalizeSpeedoStyle(savedSpeedo)
+        if normalized ~= savedSpeedo then
+            SetResourceKvp('df_hud:speedo-style', normalized)
+        end
+        SendNUIMessage({ type = 'setSpeedoStyle', style = normalized })
     end
 end
 
@@ -218,84 +342,6 @@ local function getRadioState()
     local channel = tonumber(state.radioChannel or state.radioId or 0) or 0
     local active = state.radioPressed == true or state.radioTalking == true or state.radioActive == true
     return active, channel
-end
-
-local function resolveInventory()
-    if detectedInventory and isResourceStarted(detectedInventory) then
-        return detectedInventory
-    end
-
-    local configured = Config.Minimap.inventory
-    local candidates = configured ~= 'auto'
-        and { configured }
-        or { 'ox_inventory', 'qb-inventory', 'origen_inventory' }
-
-    for _, inventoryName in ipairs(candidates) do
-        if isResourceStarted(inventoryName) then
-            detectedInventory = inventoryName
-            return detectedInventory
-        end
-    end
-
-    detectedInventory = nil
-    return nil
-end
-
-local function hasMinimapItem()
-    if not Config.Minimap.item or Config.Minimap.item == '' then
-        return true
-    end
-
-    local inventory = resolveInventory()
-    if not inventory then
-        return false
-    end
-
-    if inventory == 'ox_inventory' then
-        local ok, count = pcall(function()
-            return exports.ox_inventory:Search('count', Config.Minimap.item)
-        end)
-
-        return ok and (tonumber(count) or 0) > 0
-    end
-
-    if inventory == 'qb-inventory' then
-        QBCore = QBCore or loadCoreObject()
-
-        if QBCore and QBCore.Functions and QBCore.Functions.HasItem then
-            local ok, hasItem = pcall(function()
-                return QBCore.Functions.HasItem(Config.Minimap.item)
-            end)
-
-            if ok then
-                return hasItem == true
-            end
-        end
-
-        local ok, hasItem = pcall(function()
-            return exports['qb-inventory']:HasItem(Config.Minimap.item)
-        end)
-
-        if ok then
-            return hasItem == true
-        end
-
-        local fallbackOk, fallbackHasItem = pcall(function()
-            return exports['qb-inventory']:HasItem(cache.serverId, Config.Minimap.item, 1)
-        end)
-
-        return fallbackOk and fallbackHasItem == true
-    end
-
-    if inventory == 'origen_inventory' then
-        local ok, hasItem = pcall(function()
-            return exports.origen_inventory:hasItem(Config.Minimap.item)
-        end)
-
-        return ok and hasItem == true
-    end
-
-    return false
 end
 
 local function updateMinimapItemState()
@@ -482,14 +528,16 @@ RegisterNUICallback('closeMenu', function(_, cb)
 end)
 
 RegisterNUICallback('selectStyle', function(data, cb)
-    SetResourceKvp('df_hud:style', data.style)
-    SendNUIMessage({ type = 'setStyle', style = data.style })
+    local style = normalizeHudStyle(data.style)
+    SetResourceKvp('df_hud:style', style)
+    SendNUIMessage({ type = 'setStyle', style = style })
     cb('ok')
 end)
 
 RegisterNUICallback('selectSpeedoStyle', function(data, cb)
-    SetResourceKvp('df_hud:speedo-style', data.style)
-    SendNUIMessage({ type = 'setSpeedoStyle', style = data.style })
+    local style = normalizeSpeedoStyle(data.style)
+    SetResourceKvp('df_hud:speedo-style', style)
+    SendNUIMessage({ type = 'setSpeedoStyle', style = style })
     cb('ok')
 end)
 
@@ -517,43 +565,57 @@ RegisterNUICallback('setManualGearsEnabled', function(data, cb)
     cb('ok')
 end)
 
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    QBCore = QBCore or loadCoreObject()
-    Wait(1000)
+local function handlePlayerLoaded(playerData)
     playerLoaded = true
-    updateNeedsFromPlayerData(getPlayerData())
+    Wait(1000)
+    updateNeedsFromPlayerData(playerData or getPlayerData())
+    refreshFrameworkNeeds()
     loadManualGearsPreference()
     updateMinimapItemState()
     loadSavedStyles()
     SendNUIMessage({ type = 'setVisible', visible = true })
     sendServerConfig()
     updateRadarVisibility()
-end)
+end
 
-RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
+local function handlePlayerUnloaded()
     playerLoaded = false
     minimapItemOwned = false
     playerManualGearsEnabled = Config.ManualGears.defaultEnabled == true
     SendNUIMessage({ type = 'setVisible', visible = false })
     updateRadarVisibility()
-end)
+end
 
-RegisterNetEvent('qbx_core:client:playerLoggedOut', function()
-    playerLoaded = false
-    minimapItemOwned = false
-    playerManualGearsEnabled = Config.ManualGears.defaultEnabled == true
-    SendNUIMessage({ type = 'setVisible', visible = false })
-    updateRadarVisibility()
-end)
-
-RegisterNetEvent('QBCore:Player:SetPlayerData', function(playerData)
-    if type(playerData) ~= 'table' then
+local function registerFrameworkEvents()
+    if frameworkEventsRegistered or not frameworkAdapter or not frameworkAdapter.registerEvents then
         return
     end
 
-    playerLoaded = playerData.citizenid ~= nil or playerLoaded
-    updateNeedsFromPlayerData(playerData)
-end)
+    frameworkAdapter:registerEvents({
+        onLoaded = function(playerData)
+            handlePlayerLoaded(playerData)
+        end,
+        onUnloaded = function()
+            handlePlayerUnloaded()
+        end,
+        onPlayerData = function(playerData)
+            if type(playerData) ~= 'table' then
+                return
+            end
+
+            if frameworkAdapter.isPlayerLoaded then
+                playerLoaded = frameworkAdapter:isPlayerLoaded(playerData) == true
+            end
+            updateNeedsFromPlayerData(playerData)
+            updateMinimapItemState()
+            updateRadarVisibility()
+        end,
+    })
+    frameworkEventsRegistered = true
+end
+
+refreshFramework()
+registerFrameworkEvents()
 
 AddStateBagChangeHandler('hunger', ('player:%s'):format(cache.serverId), function(_, _, value)
     hunger = value
@@ -564,11 +626,13 @@ end)
 
 AddEventHandler('onClientResourceStart', function(resourceName)
     if resourceName ~= GetCurrentResourceName() then return end
-    QBCore = loadCoreObject()
+    refreshFramework()
+    registerFrameworkEvents()
     SendNUIMessage({ type = 'setVisible', visible = false })
     Wait(500)
     syncPlayerLoadedState()
     loadManualGearsPreference()
+    refreshFrameworkNeeds()
     updateMinimapItemState()
     loadSavedStyles()
     SendNUIMessage({ type = 'setVisible', visible = playerLoaded })
@@ -579,24 +643,45 @@ end)
 
 CreateThread(function()
     while true do
-        Wait(playerLoaded and 200 or 1000)
-        if not playerLoaded then goto oxy_continue end
+        Wait(1500)
+        local previousLoaded = playerLoaded
+        syncPlayerLoadedState()
 
-        local ped = cache.ped
-        if IsPedSwimmingUnderWater(ped) then
-            oxygen = math.max(0, oxygen - 2.0)
-            if oxygen <= 0 then
-
-                local currentHealth = GetEntityHealth(ped)
-                if currentHealth > 101 then
-                    SetEntityHealth(ped, currentHealth - 1)
-                end
-            end
-        else
-            oxygen = math.min(100, oxygen + 2.0)
+        if not previousLoaded and playerLoaded then
+            handlePlayerLoaded(getPlayerData())
+        elseif previousLoaded and not playerLoaded then
+            handlePlayerUnloaded()
         end
+    end
+end)
 
-        ::oxy_continue::
+CreateThread(function()
+    while true do
+        local needsPolling = frameworkAdapter and frameworkAdapter.refreshNeeds ~= nil
+        Wait((playerLoaded and needsPolling) and 3000 or 1000)
+        if playerLoaded and needsPolling then
+            refreshFrameworkNeeds()
+        end
+    end
+end)
+
+CreateThread(function()
+    while true do
+        Wait(playerLoaded and 200 or 1000)
+        if playerLoaded then
+            local ped = cache.ped
+            if IsPedSwimmingUnderWater(ped) then
+                oxygen = math.max(0, oxygen - 2.0)
+                if oxygen <= 0 then
+                    local currentHealth = GetEntityHealth(ped)
+                    if currentHealth > 101 then
+                        SetEntityHealth(ped, currentHealth - 1)
+                    end
+                end
+            else
+                oxygen = math.min(100, oxygen + 2.0)
+            end
+        end
     end
 end)
 
@@ -605,17 +690,14 @@ CreateThread(function()
         Wait(playerLoaded and 120 or 1000)
         if not playerLoaded then
             stamina = 100
-            goto stamina_continue
+        else
+            local ped = cache.ped
+            if shouldProtectStamina(ped) then
+                RestorePlayerStamina(PlayerId(), 1.0)
+            end
+
+            stamina = math.max(0, math.min(100, math.floor(GetPlayerStamina(PlayerId()))))
         end
-
-        local ped = cache.ped
-        if shouldProtectStamina(ped) then
-            RestorePlayerStamina(PlayerId(), 1.0)
-        end
-
-        stamina = math.max(0, math.min(100, math.floor(GetPlayerStamina(PlayerId()))))
-
-        ::stamina_continue::
     end
 end)
 
@@ -640,25 +722,21 @@ end)
 CreateThread(function()
     while true do
         Wait((Config.Voice.enabled and playerLoaded) and Config.Voice.updateInterval or 1000)
-        if not Config.Voice.enabled or not playerLoaded then
-            goto voice_continue
+        if Config.Voice.enabled and playerLoaded then
+            local playerId = PlayerId()
+            local distance = getVoiceDistance()
+            local talking = NetworkIsPlayerTalking(playerId)
+            local radioActive, radioChannel = getRadioState()
+
+            SendNUIMessage({
+                type = 'voice',
+                talking = talking,
+                range = distance,
+                mode = getVoiceMode(distance),
+                radioActive = radioActive,
+                radioChannel = radioChannel
+            })
         end
-
-        local playerId = PlayerId()
-        local distance = getVoiceDistance()
-        local talking = NetworkIsPlayerTalking(playerId)
-        local radioActive, radioChannel = getRadioState()
-
-        SendNUIMessage({
-            type = 'voice',
-            talking = talking,
-            range = distance,
-            mode = getVoiceMode(distance),
-            radioActive = radioActive,
-            radioChannel = radioChannel
-        })
-
-        ::voice_continue::
     end
 end)
 
@@ -826,169 +904,166 @@ CreateThread(function()
         local waitMs = Config.Speedo.updateInterval
         if not playerLoaded then
             Wait(1000)
-            goto continue
-        end
-
-        local ped       = cache.ped
-        local inVehicle = IsPedInAnyVehicle(ped, false)
-
-        if inVehicle then
-            local vehicle      = GetVehiclePedIsIn(ped, false)
-            local vClass       = GetVehicleClass(vehicle)
-            local speed        = math.floor(GetEntitySpeed(vehicle) * 3.6)
-            local fuel         = math.floor(GetVehicleFuelLevel(vehicle))
-            local gear         = GetVehicleCurrentGear(vehicle)
-            local rpm          = GetVehicleCurrentRpm(vehicle)
-            local engineHealth = GetVehicleEngineHealth(vehicle)
-            local coords       = GetEntityCoords(vehicle)
-            local altitude     = math.floor(coords.z)
-            local heading      = math.floor(GetEntityHeading(vehicle))
-            local vertSpeed    = math.floor((coords.z - prevAltitude) / (Config.Speedo.updateInterval / 1000))
-            local altAgl       = math.floor(GetEntityHeightAboveGround(vehicle))
-            prevAltitude = coords.z
-
-            local vType
-            if vClass == 15 then
-                vType = 'heli'
-            elseif vClass == 16 then
-                vType = 'plane'
-            elseif vClass == 14 then
-                vType = 'boat'
-            elseif vClass == 13 then
-                vType = 'bicycle'
-            elseif vClass == 8 then
-                vType = 'bike'
-            else
-                vType = 'car'
-            end
-
-            if manualVehicle ~= vehicle then
-                manualVehicle = vehicle
-                manualBaseMaxSpeed = GetVehicleEstimatedMaxSpeed(vehicle)
-                manualGear = 0
-                clutchHeld = false
-                manualMode = manualGearsAvailable() and Config.ManualGears.defaultEnabled and manualSupportedVehicle(vClass) or false
-            end
-
-            if manualGearsAvailable() and manualMode and manualSupportedVehicle(vClass) and manualBaseMaxSpeed then
-                if clutchHeld or manualGear == 0 then
-                    SetEntityMaxSpeed(vehicle, math.max(2.0, speed / 3.6 + 1.5))
-                else
-                    local ratio = Config.ManualGears.ratios[manualGear] or 1.0
-                    SetEntityMaxSpeed(vehicle, math.max(4.0, manualBaseMaxSpeed * ratio))
-                end
-                gear = manualGear
-            elseif manualBaseMaxSpeed then
-                SetEntityMaxSpeed(vehicle, manualBaseMaxSpeed)
-            end
-
-            local speedDrop = prevSpeed - speed
-            if speedDrop > 25 and vType ~= 'bicycle' and vType ~= 'bike' then
-                local threshold = seatbelt and 150 or 30
-                if prevSpeed > threshold then
-                    local prevSpeedMs = math.max(prevSpeed / 3.6, 1.0)
-                    local dirX = prevVelocity.x / prevSpeedMs
-                    local dirY = prevVelocity.y / prevSpeedMs
-                    local force = math.min(math.max(prevSpeed * 0.12, 8.0), 22.0)
-                    seatbelt = false
-                    local coords = GetEntityCoords(vehicle)
-                    SetEntityCoords(ped, coords.x + dirX * 1.5, coords.y + dirY * 1.5, coords.z + 0.6, false, false, false, false)
-                    SetEntityVelocity(ped, dirX * force, dirY * force, 5.0)
-                    SetPedToRagdoll(ped, 8000, 8000, 0, false, false, false)
-                end
-            end
-            prevVelocity = GetEntityVelocity(vehicle)
-            prevSpeed    = speed
-
-            if vType == 'car' or vType == 'bike' then
-                if speed > 10 then
-                    local steer = GetVehicleSteeringAngle(vehicle)
-                    if blinkerLeft  and steer >  15.0 then
-                        blinkerLeft = false
-                        SetVehicleIndicatorLights(vehicle, 1, false)
-                    end
-                    if blinkerRight and steer < -15.0 then
-                        blinkerRight = false
-                        SetVehicleIndicatorLights(vehicle, 0, false)
-                    end
-                end
-            end
-
-            if not wasInVehicle then
-                updateRadarVisibility()
-            end
-
-            wasInVehicle = true
-            SendNUIMessage({
-                type          = 'vehicle',
-                inVehicle     = true,
-                vehicleType   = vType,
-                speed         = speed,
-                fuel          = fuel,
-                gear          = gear,
-                rpm           = rpm,
-                altitude      = altitude,
-                altAgl        = altAgl,
-                heading       = heading,
-                vertSpeed     = vertSpeed,
-                lightsMode    = lightsMode,
-                engineWarning = engineHealth < 300,
-                blinkerLeft   = blinkerLeft,
-                blinkerRight  = blinkerRight,
-                seatbelt      = seatbelt,
-                manualMode    = manualMode,
-                manualGear    = manualGear,
-                manualGearDisplay = getManualGearDisplay(),
-                clutchHeld    = clutchHeld,
-            })
         else
-            if wasInVehicle then
-                local lastVehicle = GetVehiclePedIsIn(cache.ped, true)
-                if lastVehicle ~= 0 then
-                    SetVehicleIndicatorLights(lastVehicle, 0, false)
-                    SetVehicleIndicatorLights(lastVehicle, 1, false)
+            local ped       = cache.ped
+            local inVehicle = IsPedInAnyVehicle(ped, false)
+
+            if inVehicle then
+                local vehicle      = GetVehiclePedIsIn(ped, false)
+                local vClass       = GetVehicleClass(vehicle)
+                local speed        = math.floor(GetEntitySpeed(vehicle) * 3.6)
+                local fuel         = math.floor(GetVehicleFuelLevel(vehicle))
+                local gear         = GetVehicleCurrentGear(vehicle)
+                local rpm          = GetVehicleCurrentRpm(vehicle)
+                local engineHealth = GetVehicleEngineHealth(vehicle)
+                local coords       = GetEntityCoords(vehicle)
+                local altitude     = math.floor(coords.z)
+                local heading      = math.floor(GetEntityHeading(vehicle))
+                local vertSpeed    = math.floor((coords.z - prevAltitude) / (Config.Speedo.updateInterval / 1000))
+                local altAgl       = math.floor(GetEntityHeightAboveGround(vehicle))
+                prevAltitude = coords.z
+
+                local vType
+                if vClass == 15 then
+                    vType = 'heli'
+                elseif vClass == 16 then
+                    vType = 'plane'
+                elseif vClass == 14 then
+                    vType = 'boat'
+                elseif vClass == 13 then
+                    vType = 'bicycle'
+                elseif vClass == 8 then
+                    vType = 'bike'
+                else
+                    vType = 'car'
                 end
-                blinkerLeft  = false
-                blinkerRight = false
-                hazardOn     = false
-                seatbelt     = false
-                lightsMode   = 0
-                prevSpeed    = 0
-                prevVelocity = vector3(0, 0, 0)
-                SetVehicleFullbeam(lastVehicle, false)
-                wasInVehicle = false
-                prevAltitude = 0.0
-                resetManualGearState(lastVehicle)
-                updateRadarVisibility()
+
+                if manualVehicle ~= vehicle then
+                    manualVehicle = vehicle
+                    manualBaseMaxSpeed = GetVehicleEstimatedMaxSpeed(vehicle)
+                    manualGear = 0
+                    clutchHeld = false
+                    manualMode = manualGearsAvailable() and Config.ManualGears.defaultEnabled and manualSupportedVehicle(vClass) or false
+                end
+
+                if manualGearsAvailable() and manualMode and manualSupportedVehicle(vClass) and manualBaseMaxSpeed then
+                    if clutchHeld or manualGear == 0 then
+                        SetEntityMaxSpeed(vehicle, math.max(2.0, speed / 3.6 + 1.5))
+                    else
+                        local ratio = Config.ManualGears.ratios[manualGear] or 1.0
+                        SetEntityMaxSpeed(vehicle, math.max(4.0, manualBaseMaxSpeed * ratio))
+                    end
+                    gear = manualGear
+                elseif manualBaseMaxSpeed then
+                    SetEntityMaxSpeed(vehicle, manualBaseMaxSpeed)
+                end
+
+                local speedDrop = prevSpeed - speed
+                if speedDrop > 25 and vType ~= 'bicycle' and vType ~= 'bike' then
+                    local threshold = seatbelt and 150 or 30
+                    if prevSpeed > threshold then
+                        local prevSpeedMs = math.max(prevSpeed / 3.6, 1.0)
+                        local dirX = prevVelocity.x / prevSpeedMs
+                        local dirY = prevVelocity.y / prevSpeedMs
+                        local force = math.min(math.max(prevSpeed * 0.12, 8.0), 22.0)
+                        seatbelt = false
+                        local coords = GetEntityCoords(vehicle)
+                        SetEntityCoords(ped, coords.x + dirX * 1.5, coords.y + dirY * 1.5, coords.z + 0.6, false, false, false, false)
+                        SetEntityVelocity(ped, dirX * force, dirY * force, 5.0)
+                        SetPedToRagdoll(ped, 8000, 8000, 0, false, false, false)
+                    end
+                end
+
+                prevVelocity = GetEntityVelocity(vehicle)
+                prevSpeed    = speed
+
+                if vType == 'car' or vType == 'bike' then
+                    if speed > 10 then
+                        local steer = GetVehicleSteeringAngle(vehicle)
+                        if blinkerLeft  and steer >  15.0 then
+                            blinkerLeft = false
+                            SetVehicleIndicatorLights(vehicle, 1, false)
+                        end
+                        if blinkerRight and steer < -15.0 then
+                            blinkerRight = false
+                            SetVehicleIndicatorLights(vehicle, 0, false)
+                        end
+                    end
+                end
+
+                if not wasInVehicle then
+                    updateRadarVisibility()
+                end
+
+                wasInVehicle = true
+                SendNUIMessage({
+                    type          = 'vehicle',
+                    inVehicle     = true,
+                    vehicleType   = vType,
+                    speed         = speed,
+                    fuel          = fuel,
+                    gear          = gear,
+                    rpm           = rpm,
+                    altitude      = altitude,
+                    altAgl        = altAgl,
+                    heading       = heading,
+                    vertSpeed     = vertSpeed,
+                    lightsMode    = lightsMode,
+                    engineWarning = engineHealth < 300,
+                    blinkerLeft   = blinkerLeft,
+                    blinkerRight  = blinkerRight,
+                    seatbelt      = seatbelt,
+                    manualMode    = manualMode,
+                    manualGear    = manualGear,
+                    manualGearDisplay = getManualGearDisplay(),
+                    clutchHeld    = clutchHeld,
+                })
+            else
+                if wasInVehicle then
+                    local lastVehicle = GetVehiclePedIsIn(cache.ped, true)
+                    if lastVehicle ~= 0 then
+                        SetVehicleIndicatorLights(lastVehicle, 0, false)
+                        SetVehicleIndicatorLights(lastVehicle, 1, false)
+                    end
+                    blinkerLeft  = false
+                    blinkerRight = false
+                    hazardOn     = false
+                    seatbelt     = false
+                    lightsMode   = 0
+                    prevSpeed    = 0
+                    prevVelocity = vector3(0, 0, 0)
+                    SetVehicleFullbeam(lastVehicle, false)
+                    wasInVehicle = false
+                    prevAltitude = 0.0
+                    resetManualGearState(lastVehicle)
+                    updateRadarVisibility()
+                end
+                SendNUIMessage({ type = 'vehicle', inVehicle = false })
+                waitMs = 300
             end
-            SendNUIMessage({ type = 'vehicle', inVehicle = false })
-            waitMs = 300
         end
 
         Wait(waitMs)
-        ::continue::
     end
 end)
 
 CreateThread(function()
     while true do
         Wait(playerLoaded and 120 or 1000)
-        if not playerLoaded then goto comp_continue end
+        if playerLoaded then
+            local camRot  = GetGameplayCamRot(2)
+            local h       = camRot.z
+            if h < 0.0 then h = h + 360.0 end
+            local compass = (360.0 - h) % 360.0
 
-        local camRot  = GetGameplayCamRot(2)
-        local h       = camRot.z
-        if h < 0.0 then h = h + 360.0 end
-        local compass = (360.0 - h) % 360.0
+            local coords    = GetEntityCoords(cache.ped)
+            local streetHash = GetStreetNameAtCoord(coords.x, coords.y, coords.z)
+            local street     = GetStreetNameFromHashKey(streetHash)
+            if not street or street == '' then
+                street = GetLabelText(GetNameOfZone(coords.x, coords.y, coords.z))
+            end
 
-        local coords    = GetEntityCoords(cache.ped)
-        local streetHash = GetStreetNameAtCoord(coords.x, coords.y, coords.z)
-        local street     = GetStreetNameFromHashKey(streetHash)
-        if not street or street == '' then
-            street = GetLabelText(GetNameOfZone(coords.x, coords.y, coords.z))
+            SendNUIMessage({ type = 'compass', heading = compass, street = street })
         end
-
-        SendNUIMessage({ type = 'compass', heading = compass, street = street })
-
-        ::comp_continue::
     end
 end)
